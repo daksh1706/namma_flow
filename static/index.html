@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstraFlow - Event-Driven Traffic Mitigation Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-code-branch fa-rotate-90 text-glow"></i>
+                </div>
+                <div class="logo-text">
+                    <h2>AstraFlow</h2>
+                    <span>Traffic Intel Engine</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="analytics">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Historical Analytics</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="planner">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                    <span>Mitigation Planner</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="learning">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Post-Event Learning</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-badge">
+                    <span class="pulse-dot"></span>
+                    <span>ML Engine Online</span>
+                </div>
+                <div class="hackathon-tag">Hackathon Prototype v1.0</div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h1 id="page-title">Historical Analytics</h1>
+                    <p id="page-subtitle">Visualizing congestion insights and hotspots from 8,000+ historical reports in Bengaluru</p>
+                </div>
+                <div class="user-profile">
+                    <div class="control-room-badge">
+                        <i class="fa-solid fa-tower-broadcast"></i> Control Room Bengaluru
+                    </div>
+                </div>
+            </header>
+
+            <!-- TAB 1: HISTORICAL ANALYTICS -->
+            <section id="tab-analytics" class="tab-content active">
+                <!-- KPI Banner -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Total Analyzed Events</span>
+                            <div class="kpi-icon blue"><i class="fa-solid fa-database"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="kpi-total-events">8,173</h2>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-check"></i> Complete Dataset loaded</span>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">High Priority Incidents</span>
+                            <div class="kpi-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="kpi-high-priority">61.5%</h2>
+                        <span class="kpi-trend"><i class="fa-solid fa-eye"></i> 5,030 High risk incidents</span>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Road Closure Required</span>
+                            <div class="kpi-icon orange"><i class="fa-solid fa-road-barrier"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="kpi-road-closures">8.3%</h2>
+                        <span class="kpi-trend"><i class="fa-solid fa-lock"></i> 676 Critical closures</span>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Most Frequent Cause</span>
+                            <div class="kpi-icon purple"><i class="fa-solid fa-truck-pickup"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="kpi-frequent-cause" style="font-size: 1.5rem; margin-top: 0.6rem;">Vehicle Breakdown</h2>
+                        <span class="kpi-trend"><i class="fa-solid fa-circle-info"></i> 4,896 reported cases</span>
+                    </div>
+                </div>
+
+                <!-- Map & Core Visuals -->
+                <div class="dashboard-grid">
+                    <!-- Map Container -->
+                    <div class="card map-card span-8">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-map-location-dot"></i> Bengaluru Traffic Hotspots Map</h3>
+                            <span class="card-action">Showing 800 sampled incidents</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="analytics-map" class="leaflet-map-container"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Side distribution -->
+                    <div class="card span-4">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-circle-info"></i> Heatmap Key</h3>
+                        </div>
+                        <div class="card-body map-legend-body">
+                            <p class="legend-desc">Historical incident density centered around major Bengaluru corridors.</p>
+                            <div class="legend-list">
+                                <div class="legend-item">
+                                    <span class="legend-color-dot" style="background: rgba(239, 68, 68, 0.75);"></span>
+                                    <div class="legend-text">
+                                        <strong>High Priority Closure</strong>
+                                        <span>Red alert zones requiring complete diversion.</span>
+                                    </div>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color-dot" style="background: rgba(245, 158, 11, 0.7);"></span>
+                                    <div class="legend-text">
+                                        <strong>High Priority (No Closure)</strong>
+                                        <span>Orange alerts. Traffic bottlenecks.</span>
+                                    </div>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color-dot" style="background: rgba(59, 130, 246, 0.65);"></span>
+                                    <div class="legend-text">
+                                        <strong>Low Priority Events</strong>
+                                        <span>Blue points. Minimal disruption.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-stats-box">
+                                <h4 class="box-title">Analytics Insight</h4>
+                                <p>Congestion events are heavily concentrated around the <strong>Outer Ring Road (ORR)</strong>, <strong>Mysore Road</strong>, and <strong>Bellary Road</strong> corridors. Peak hours exhibit a 2.4x surge in incidents compared to off-peak times.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="dashboard-grid">
+                    <div class="card span-6">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-bar"></i> Event Cause Breakdown</h3>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="chart-causes"></canvas>
+                        </div>
+                    </div>
+                    <div class="card span-6">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-line"></i> Hourly Incident Distribution (Peak Times)</h3>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="chart-hours"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card span-6">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-building-shield"></i> Top Affected Police Stations</h3>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="chart-stations"></canvas>
+                        </div>
+                    </div>
+                    <div class="card span-6">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-road"></i> Top Corridors</h3>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="chart-corridors"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: MITIGATION PLANNER -->
+            <section id="tab-planner" class="tab-content">
+                <div class="dashboard-grid">
+                    <!-- Form Column -->
+                    <div class="card span-4">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-sliders"></i> Event Simulation Parameters</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="simulator-form" class="form-container">
+                                <div class="form-group">
+                                    <label for="sim-event-type">Event Type</label>
+                                    <select id="sim-event-type" required>
+                                        <option value="unplanned">Unplanned (Sudden Gathering, Breakdown, etc.)</option>
+                                        <option value="planned">Planned (Festival, Sports, Construction, Rally)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sim-event-cause">Event Cause</label>
+                                    <select id="sim-event-cause" required>
+                                        <!-- Will be populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group span-6">
+                                        <label for="sim-priority">Priority</label>
+                                        <select id="sim-priority" required>
+                                            <option value="High">High Priority</option>
+                                            <option value="Low">Low Priority</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group span-6">
+                                        <label for="sim-road-closure">Road Closure</label>
+                                        <div class="switch-container">
+                                            <input type="checkbox" id="sim-road-closure">
+                                            <label for="sim-road-closure" class="switch-label"></label>
+                                            <span class="switch-text">Requires Closure</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sim-police-station">Target Police Station Jurisdiction</label>
+                                    <select id="sim-police-station" required>
+                                        <!-- Will be populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sim-corridor">Target Corridor</label>
+                                    <select id="sim-corridor" required>
+                                        <!-- Will be populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group span-6">
+                                        <label for="sim-latitude">Latitude</label>
+                                        <input type="number" id="sim-latitude" step="0.000001" value="12.9716" required>
+                                    </div>
+                                    <div class="form-group span-6">
+                                        <label for="sim-longitude">Longitude</label>
+                                        <input type="number" id="sim-longitude" step="0.000001" value="77.5946" required>
+                                    </div>
+                                </div>
+                                <div class="map-helper-tip">
+                                    <i class="fa-solid fa-circle-info"></i> Tip: You can click anywhere on the simulator map to place a pin and load coordinates!
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group span-6">
+                                        <label for="sim-hour">Time of Day (Hour)</label>
+                                        <select id="sim-hour" required>
+                                            <option value="8">08:00 AM (Morning Peak)</option>
+                                            <option value="9">09:00 AM (Morning Peak)</option>
+                                            <option value="10">10:00 AM (Morning Peak)</option>
+                                            <option value="13">01:00 PM (Off Peak)</option>
+                                            <option value="17">05:00 PM (Evening Peak)</option>
+                                            <option value="18" selected>06:00 PM (Evening Peak)</option>
+                                            <option value="19">07:00 PM (Evening Peak)</option>
+                                            <option value="22">10:00 PM (Late Night)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group span-6">
+                                        <label for="sim-day">Day of Week</label>
+                                        <select id="sim-day" required>
+                                            <option value="1" selected>Weekday (Tuesday)</option>
+                                            <option value="6">Weekend (Sunday)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block glow-btn">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Run Impact Analysis
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Map/Prediction Column -->
+                    <div class="card span-8">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-map-location-dot"></i> Live Simulation Map</h3>
+                            <span id="simulator-coordinates">Click map to set location</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="planner-map" class="leaflet-map-container" style="height: 540px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendation Output (Initially hidden until prediction runs) -->
+                <div id="prediction-result-panel" class="prediction-results" style="display: none;">
+                    <div class="dashboard-grid">
+                        <!-- Predictive Forecast Card -->
+                        <div class="card span-4 gradient-border glow-purple">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-robot"></i> Predictive Impact Forecast</h3>
+                            </div>
+                            <div class="card-body forecast-body">
+                                <div class="severity-badge-large" id="res-severity">
+                                    <span class="severity-title">CONGESTION SEVERITY</span>
+                                    <span class="severity-value" id="res-severity-value">CRITICAL</span>
+                                    <span class="severity-glow red-glow"></span>
+                                </div>
+                                <div class="forecast-metric">
+                                    <div class="metric-icon"><i class="fa-solid fa-clock"></i></div>
+                                    <div class="metric-text">
+                                        <span class="metric-label">Forecasted Resolution Time</span>
+                                        <h3 class="metric-value" id="res-duration">124.5 min</h3>
+                                        <span class="metric-subtext">Estimated using Random Forest Regressor</span>
+                                    </div>
+                                </div>
+                                <div class="forecast-metric">
+                                    <div class="metric-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                    <div class="metric-text">
+                                        <span class="metric-label">Mitigation Scope</span>
+                                        <h3 class="metric-value" id="res-scope" style="font-size: 1.2rem;">Full Segment Diversion</h3>
+                                        <span class="metric-subtext">Action protocol recommended</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prescriptive Resource Plan -->
+                        <div class="card span-8 gradient-border glow-blue">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-traffic-light"></i> Prescriptive Mitigation Plan</h3>
+                                <span class="badge badge-success">Optimized Blueprint</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="resource-grid">
+                                    <!-- Manpower -->
+                                    <div class="resource-section">
+                                        <h4 class="resource-section-title"><i class="fa-solid fa-user-shield"></i> Tactical Manpower (Traffic Police)</h4>
+                                        <div class="headcount-badge">
+                                            <span class="headcount-label">Recommended Headcount:</span>
+                                            <span class="headcount-num" id="res-manpower-count">15</span>
+                                        </div>
+                                        <ul class="deployment-list" id="res-manpower-distribution">
+                                            <!-- Distribution list will be injected here -->
+                                        </ul>
+                                    </div>
+                                    
+                                    <!-- Barricading -->
+                                    <div class="resource-section">
+                                        <h4 class="resource-section-title"><i class="fa-solid fa-road-barrier"></i> Barricading Strategy</h4>
+                                        <div class="headcount-badge">
+                                            <span class="headcount-label">Barricades Needed:</span>
+                                            <span class="headcount-num" id="res-barricades-count">30</span>
+                                        </div>
+                                        <p class="resource-desc" id="res-barricades-desc">Deploy barricades in heavy blockades configuration at core site and exit points.</p>
+                                    </div>
+                                </div>
+
+                                <hr class="card-divider">
+
+                                <!-- Diversion Plan -->
+                                <div class="resource-section full-width">
+                                    <h4 class="resource-section-title"><i class="fa-solid fa-signs-post"></i> Diversion & Rerouting Protocol</h4>
+                                    <div class="diversion-alert" id="res-diversion-status">
+                                        <i class="fa-solid fa-triangle-exclamation"></i> Full diversion recommended. Segments are blocked.
+                                    </div>
+                                    <div class="diversion-details">
+                                        <p class="resource-desc" id="res-diversion-desc">Divert traffic from the main avenue to alternative bypass corridors.</p>
+                                        <div class="junctions-box">
+                                            <strong>Key Diversion Control Junctions:</strong>
+                                            <ul class="junction-tags" id="res-diversion-junctions">
+                                                <!-- Tags injected here -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post-Event Closure Action Panel -->
+                    <div class="dashboard-grid justify-center">
+                        <div class="card span-8 closing-card">
+                            <div class="card-header text-center">
+                                <h3><i class="fa-solid fa-file-signature"></i> Post-Event Incident Closure & Learning Loop</h3>
+                                <p class="card-subtitle">Log what actually transpired on the ground to improve future model predictions</p>
+                            </div>
+                            <div class="card-body">
+                                <form id="feedback-form" class="feedback-grid">
+                                    <input type="hidden" id="feed-event-id">
+                                    <input type="hidden" id="feed-event-cause">
+                                    <input type="hidden" id="feed-pred-severity">
+                                    <input type="hidden" id="feed-pred-duration">
+                                    <input type="hidden" id="feed-rec-officers">
+                                    <input type="hidden" id="feed-rec-barricades">
+
+                                    <div class="feedback-col">
+                                        <div class="form-group">
+                                            <label for="feed-actual-severity">Actual Incident Severity</label>
+                                            <select id="feed-actual-severity" required>
+                                                <option value="Low">Low (Minimal Delay)</option>
+                                                <option value="Medium">Medium (Slow Traffic)</option>
+                                                <option value="High">High (Major Congestion)</option>
+                                                <option value="Critical">Critical (Gridlock / Blockage)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="feed-actual-duration">Actual Resolution Time (Minutes)</label>
+                                            <input type="number" id="feed-actual-duration" min="1" placeholder="e.g. 90" required>
+                                        </div>
+                                    </div>
+                                    <div class="feedback-col">
+                                        <div class="form-group">
+                                            <label for="feed-actual-officers">Actual Police Headcount Deployed</label>
+                                            <input type="number" id="feed-actual-officers" min="0" placeholder="e.g. 12" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="feed-actual-barricades">Actual Barricades Deployed</label>
+                                            <input type="number" id="feed-actual-barricades" min="0" placeholder="e.g. 25" required>
+                                        </div>
+                                    </div>
+                                    <div class="feedback-col span-full">
+                                        <div class="form-group">
+                                            <label>Diversion Effectiveness Rating</label>
+                                            <div class="rating-container">
+                                                <input type="radio" name="feed-rating" id="star-5" value="5" required><label for="star-5"><i class="fa-solid fa-star"></i></label>
+                                                <input type="radio" name="feed-rating" id="star-4" value="4"><label for="star-4"><i class="fa-solid fa-star"></i></label>
+                                                <input type="radio" name="feed-rating" id="star-3" value="3" checked><label for="star-3"><i class="fa-solid fa-star"></i></label>
+                                                <input type="radio" name="feed-rating" id="star-2" value="2"><label for="star-2"><i class="fa-solid fa-star"></i></label>
+                                                <input type="radio" name="feed-rating" id="star-1" value="1"><label for="star-1"><i class="fa-solid fa-star"></i></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="feed-diversion-effective">Was the diversion strategy effective?</label>
+                                            <select id="feed-diversion-effective" required>
+                                                <option value="yes">Yes, traffic cleared efficiently</option>
+                                                <option value="no">No, created bottlenecks elsewhere</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="span-full text-center">
+                                        <button type="submit" class="btn btn-accent px-6">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i> Submit Ground Closure & Train Feedback Loop
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: POST-EVENT LEARNING -->
+            <section id="tab-learning" class="tab-content">
+                <!-- Learning KPIs -->
+                <div class="kpi-grid">
+                    <div class="kpi-card green-accent">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Closed Feedback Cycles</span>
+                            <div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="learn-kpi-total">20</h2>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-database"></i> Continuous learning database</span>
+                    </div>
+                    <div class="kpi-card purple-accent">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Model Confidence Rating</span>
+                            <div class="kpi-icon"><i class="fa-solid fa-star"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="learn-kpi-rating">4.2 / 5.0</h2>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-chevron-up"></i> Based on ground police reviews</span>
+                    </div>
+                    <div class="kpi-card orange-accent">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Severity Prediction Accuracy</span>
+                            <div class="kpi-icon"><i class="fa-solid fa-bullseye"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="learn-kpi-accuracy">85.0%</h2>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> Up 15% since system init</span>
+                    </div>
+                    <div class="kpi-card blue-accent">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Manpower Hours Saved</span>
+                            <div class="kpi-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        </div>
+                        <h2 class="kpi-value" id="learn-kpi-savings">24 officers</h2>
+                        <span class="kpi-trend positive"><i class="fa-solid fa-leaf"></i> Optimized deployment reduction</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Accuracy Progression Chart -->
+                    <div class="card span-8">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-brain"></i> System Performance & Accuracy Learning Curve</h3>
+                            <span class="card-action">Updated in real-time on closure submission</span>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="chart-learning-curve"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Feedback info box -->
+                    <div class="card span-4">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-lightbulb"></i> How AstraFlow Learns</h3>
+                        </div>
+                        <div class="card-body learning-desc-body">
+                            <div class="learning-step">
+                                <span class="step-num">1</span>
+                                <div class="step-content">
+                                    <strong>Predict & Recommend</strong>
+                                    <p>Random Forest models forecast congestion parameters and recommend manpower, barricades, and diversions based on 8,000+ historical incidents.</p>
+                                </div>
+                            </div>
+                            <div class="learning-step">
+                                <span class="step-num">2</span>
+                                <div class="step-content">
+                                    <strong>Ground Officer Override</strong>
+                                    <p>Ground officers deploy resources and log exact adjustments, corrections, and results inside the app.</p>
+                                </div>
+                            </div>
+                            <div class="learning-step">
+                                <span class="step-num">3</span>
+                                <div class="step-content">
+                                    <strong>Feedback Assimilation</strong>
+                                    <p>The system stores feedback, calibrates predictions, and logs discrepancies. Over time, models are retrained using this ground-truth data, closing the loop.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedbacks Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-history"></i> Recent Ground Feedback Log</h3>
+                    </div>
+                    <div class="card-body table-container">
+                        <table class="feedback-table" id="feedback-log-table">
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Cause</th>
+                                    <th>Predicted Severity</th>
+                                    <th>Actual Severity</th>
+                                    <th>Pred / Actual Dur</th>
+                                    <th>Officers Rec / Act</th>
+                                    <th>Barricades Rec / Act</th>
+                                    <th>Rating</th>
+                                    <th>Effective</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Feedback rows dynamically injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification system -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Dashboard Logic -->
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

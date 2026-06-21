@@ -1,0 +1,19 @@
+# Python Caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# Task & Agent Logs
+.system_generated/
+*.log
