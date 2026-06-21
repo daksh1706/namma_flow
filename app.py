@@ -10,7 +10,7 @@ from pydantic import BaseModel
 import joblib
 
 # Paths
-BASE_DIR = "/Users/daksh/Desktop/hackathon"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE_DIR, "Astram event data_anonymized - Astram event data_anonymizedb40ac87.csv")
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 FEEDBACK_FILE = os.path.join(BASE_DIR, "feedback.json")

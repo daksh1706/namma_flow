@@ -8,8 +8,9 @@ from sklearn.preprocessing import LabelEncoder
 import joblib
 
 # Paths
-CSV_PATH = "/Users/daksh/Desktop/hackathon/Astram event data_anonymized - Astram event data_anonymizedb40ac87.csv"
-MODEL_DIR = "/Users/daksh/Desktop/hackathon/models"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.join(BASE_DIR, "Astram event data_anonymized - Astram event data_anonymizedb40ac87.csv")
+MODEL_DIR = os.path.join(BASE_DIR, "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 def train_and_save():
