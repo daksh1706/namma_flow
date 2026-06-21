@@ -14,7 +14,7 @@ let chartCorridors = null;
 let chartLearningCurve = null;
 
 // API Base URL: Auto-detects local vs production Render backend
-const RENDER_BACKEND_URL = "https://YOUR-RENDER-APP-NAME.onrender.com"; // <-- REPLACE WITH YOUR RENDER URL
+const RENDER_BACKEND_URL = "https://astra-flow-q3m2.onrender.com"; // <-- REPLACE WITH YOUR RENDER URL
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
     ? "" 
     : RENDER_BACKEND_URL;
