@@ -1,6 +1,6 @@
-# AstraFlow (Event-Driven Traffic Mitigation Platform)
+# NammaFlow (Event-Driven Traffic Mitigation Platform)
 
-AstraFlow is a data-driven predictive platform designed to forecast the traffic impact of planned and unplanned events in Bengaluru and optimize resource deployment (manpower, barricades, and diversions). By leveraging historical traffic incident reports, the platform replaces experience-driven resource planning with automated, predictive decision support, and introduces a **Post-Event Learning System** that continually improves recommendations.
+NammaFlow is a data-driven predictive platform designed to forecast the traffic impact of planned and unplanned events in Bengaluru and optimize resource deployment (manpower, barricades, and diversions). By leveraging historical traffic incident reports, the platform replaces experience-driven resource planning with automated, predictive decision support, and introduces a **Post-Event Learning System** that continually improves recommendations.
 
 ---
 
@@ -71,7 +71,7 @@ Run the helper launch script:
 ```bash
 python3 run_app.py
 ```
-AstraFlow will start on `http://127.0.0.1:8000` and automatically open in your default browser.
+NammaFlow will start on `http://127.0.0.1:8000` and automatically open in your default browser.
 
 ---
 
@@ -82,7 +82,7 @@ To push this repository to GitHub, run the following commands in the project dir
 ```bash
 git init
 git add .
-git commit -m "first commit - AstraFlow complete code, models, and static assets"
+git commit -m "first commit - NammaFlow complete code, models, and static assets"
 git branch -M main
 git remote add origin https://github.com/daksh1706/astra_flow.git
 git push -u origin main

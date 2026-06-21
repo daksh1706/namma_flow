@@ -8,7 +8,7 @@ def open_browser():
 
 if __name__ == "__main__":
     print("--------------------------------------------------")
-    print("AstraFlow: Event-Driven Congestion Mitigation Platform")
+    print("NammaFlow: Event-Driven Congestion Mitigation Platform")
     print("Bengaluru Traffic Control Room Simulator")
     print("--------------------------------------------------")
     print("Starting FastAPI app server...")

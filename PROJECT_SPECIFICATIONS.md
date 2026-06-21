@@ -1,11 +1,11 @@
 # Project Technical Specifications & Video Demonstration Guide
 
-This document outlines the technologies, methodology, and features of the **AstraFlow (Event-Driven Traffic Mitigation Platform)** prototype. Use this guide to structure your video demonstration, slides, and presentation.
+This document outlines the technologies, methodology, and features of the **NammaFlow (Event-Driven Traffic Mitigation Platform)** prototype. Use this guide to structure your video demonstration, slides, and presentation.
 
 ---
 
 ## 1. Project Overview & Tagline
-*   **Project Title**: AstraFlow
+*   **Project Title**: NammaFlow
 *   **Tagline**: Data-driven, closed-loop event traffic forecasting & tactical resource deployment optimizer.
 *   **Target Impact**: Replaces experience-driven, manual traffic planning with predictive ML models and automated resource dispatch checklists, incorporating a first-of-its-kind post-event feedback loop.
 
@@ -75,7 +75,7 @@ Once the model predicts severity, the backend dynamically calculates optimized r
 Structure your screen-recording or demo video into these 5 clear steps:
 
 ### Step 1: Dashboard Overview (Tab 1)
-*   **What to say**: *"This is AstraFlow, an AI-powered control room dashboard for traffic mitigation in Bengaluru. Our homepage aggregates 8,000+ historical incident reports. You can zoom in on this hotspot map and hover over markers to inspect real accidents, breakdowns, or road works."*
+*   **What to say**: *"This is NammaFlow, an AI-powered control room dashboard for traffic mitigation in Bengaluru. Our homepage aggregates 8,000+ historical incident reports. You can zoom in on this hotspot map and hover over markers to inspect real accidents, breakdowns, or road works."*
 *   **What to show**: Pan around the Leaflet map, click a few markers to show popups, and scroll to show the Cause Breakdown and Hourly Commute Peak charts.
 
 ### Step 2: The Mitigation Simulator (Tab 2)
@@ -87,7 +87,7 @@ Structure your screen-recording or demo video into these 5 clear steps:
 *   **What to show**: Scroll down to show the glowing "High" severity card. Highlight the manpower distribution. Hover over the amber diversion pins on the map to show their names.
 
 ### Step 4: Closing the Incident & Feedback Loop
-*   **What to say**: *"The key challenge today is that traffic command centers do not learn from the past. AstraFlow introduces a post-event feedback loop. When the construction ends, ground officers log the actual values. Let's record that the actual duration was 510 minutes, we deployed 7 officers, and rated the system's diversion plan 5 stars."*
+*   **What to say**: *"The key challenge today is that traffic command centers do not learn from the past. NammaFlow introduces a post-event feedback loop. When the construction ends, ground officers log the actual values. Let's record that the actual duration was 510 minutes, we deployed 7 officers, and rated the system's diversion plan 5 stars."*
 *   **What to show**: In the "Post-Event Closure" form, verify the values, click the 5th star for rating, and click **Submit Ground Closure**.
 
 ### Step 5: Demonstration of the Learning System (Tab 3)

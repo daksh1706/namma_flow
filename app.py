@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
 
 # Initialize FastAPI
 app = FastAPI(
-    title="AstraFlow: Event-Driven Congestion Mitigation Platform",
+    title="NammaFlow: Event-Driven Congestion Mitigation Platform",
     lifespan=lifespan
 )
 

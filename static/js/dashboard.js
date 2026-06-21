@@ -1,4 +1,4 @@
-// AstraFlow Dashboard Javascript
+// NammaFlow Dashboard Javascript
 
 // Global Variables
 let analyticsMap = null;

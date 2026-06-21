@@ -1,6 +1,6 @@
-# AstraFlow: Dashboard User Guide & Demo Walkthrough
+# NammaFlow: Dashboard User Guide & Demo Walkthrough
 
-This guide explains how to use and demonstrate the **AstraFlow Dashboard** interface, detailing the fields, tabs, and interactive maps.
+This guide explains how to use and demonstrate the **NammaFlow Dashboard** interface, detailing the fields, tabs, and interactive maps.
 
 ---
 
