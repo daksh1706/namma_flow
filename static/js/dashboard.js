@@ -13,8 +13,11 @@ let chartStations = null;
 let chartCorridors = null;
 let chartLearningCurve = null;
 
-// API Base URL (Relative path since we serve static files from FastAPI)
-const API_BASE = "";
+// API Base URL: Auto-detects local vs production Render backend
+const RENDER_BACKEND_URL = "https://YOUR-RENDER-APP-NAME.onrender.com"; // <-- REPLACE WITH YOUR RENDER URL
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+    ? "" 
+    : RENDER_BACKEND_URL;
 
 // Initialize App
 document.addEventListener("DOMContentLoaded", () => {
