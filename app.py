@@ -232,8 +232,8 @@ def get_analytics():
     if historical_df is None:
         raise HTTPException(status_code=503, detail="Historical dataset not loaded")
         
-    # Sample 800 events to show as map points (hotspots)
-    map_points = historical_df[['latitude', 'longitude', 'event_cause', 'priority', 'requires_road_closure']].sample(n=min(800, len(historical_df)), random_state=42).to_dict(orient='records')
+    # Sample 120 events to show as map points (hotspots)
+    map_points = historical_df[['latitude', 'longitude', 'event_cause', 'priority', 'requires_road_closure']].sample(n=min(120, len(historical_df)), random_state=42).to_dict(orient='records')
     
     # Event cause counts
     cause_counts = historical_df['event_cause'].value_counts().head(10).to_dict()
