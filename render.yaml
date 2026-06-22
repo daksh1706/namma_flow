@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: namma-flow
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
