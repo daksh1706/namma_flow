@@ -15,7 +15,10 @@ let chartLearningCurve = null;
 
 // API Base URL: Auto-detects local vs production Render backend
 const RENDER_BACKEND_URL = "https://astra-flow-q3m2.onrender.com"; // <-- REPLACE WITH YOUR RENDER URL
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+const API_BASE = (window.location.hostname === 'localhost' || 
+                  window.location.hostname === '127.0.0.1' || 
+                  window.location.hostname === '' ||
+                  window.location.port !== '') 
     ? "" 
     : RENDER_BACKEND_URL;
 
@@ -485,7 +488,7 @@ async function handleSimulatorSubmit(e) {
             result.diversion.recommended_junctions.forEach(junc => {
                 const li = document.createElement("li");
                 li.className = "junction-tag";
-                li.innerHTML = `<i class="fa-solid fa-diamond-turn-right"></i> ${junc}`;
+                li.innerHTML = `<i class="fa-solid fa-diamond-turn-right"></i> ${humanizeJunctionName(junc)}`;
                 junctionContainer.appendChild(li);
             });
         } else {
@@ -508,7 +511,7 @@ async function handleSimulatorSubmit(e) {
                 });
                 
                 const marker = L.marker([divPt.lat, divPt.lng], { icon: divIcon }).addTo(plannerMap);
-                marker.bindPopup(`<strong>${divPt.name}</strong><br>${divPt.role}`);
+                marker.bindPopup(`<strong>${humanizeJunctionName(divPt.name)}</strong><br>${humanizeJunctionName(divPt.role)}`);
                 diversionMarkers.push(marker);
                 
                 // Draw connecting dashed line
@@ -760,4 +763,23 @@ function renderLearningProgressionChart(learningCurve) {
             }
         }
     });
+}
+
+function humanizeJunctionName(name) {
+    if (!name) return "";
+    
+    // Add space before capital letters (camelCase splitting)
+    let formatted = name.replace(/([a-z])([A-Z])/g, '$1 $2');
+    
+    // Add space around parentheses
+    formatted = formatted.replace(/\s*\(\s*/g, ' (').replace(/\s*\)\s*/g, ') ');
+    
+    // Replace Junc/Junction with "Junction" cleanly
+    formatted = formatted.replace(/Junc\b/g, 'Junction');
+    formatted = formatted.replace(/Junctions\b/g, 'Junction');
+    
+    // Remove duplicate words like "Junction Junction" or fix spacing
+    formatted = formatted.replace(/\s+/g, ' ').trim();
+    
+    return formatted;
 }
