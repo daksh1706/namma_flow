@@ -3,7 +3,7 @@ import json
 from contextlib import asynccontextmanager
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -47,19 +47,29 @@ encoders = None
 severity_clf = None
 duration_reg = None
 station_coords = None
+junction_coords = None
 meta_info = None
 historical_df = None
 
 # Load models and data
 def load_resources():
-    global encoders, severity_clf, duration_reg, station_coords, meta_info, historical_df
+    global encoders, severity_clf, duration_reg, station_coords, junction_coords, meta_info, historical_df
     try:
         encoders = joblib.load(os.path.join(MODEL_DIR, "encoders.joblib"))
         severity_clf = joblib.load(os.path.join(MODEL_DIR, "severity_classifier.joblib"))
         duration_reg = joblib.load(os.path.join(MODEL_DIR, "duration_regressor.joblib"))
         
-        with open(os.path.join(MODEL_DIR, "station_coords.json"), "r") as f:
-            station_coords = json.load(f)
+        try:
+            with open(os.path.join(MODEL_DIR, "station_coords.json"), "r") as f:
+                station_coords = json.load(f)
+        except Exception:
+            station_coords = {}
+            
+        try:
+            with open(os.path.join(MODEL_DIR, "junction_coords.json"), "r") as f:
+                junction_coords = json.load(f)
+        except Exception:
+            junction_coords = {}
             
         with open(os.path.join(MODEL_DIR, "meta_info.json"), "r") as f:
             meta_info = json.load(f)
@@ -101,6 +111,20 @@ def init_feedback_database():
     
     for i in range(1, 21):
         cause = causes[i % len(causes)]
+        # Simulated features
+        event_type = "planned" if cause in ["protest", "public_event", "construction"] else "unplanned"
+        priority = "High" if i % 3 == 0 else "Low"
+        requires_road_closure = True if (i % 5 == 0 and cause in ["protest", "water_logging", "accident"]) else False
+        
+        # Corridors and Police Stations from typical Bengaluru routes
+        corridors = ["Tumkur Road", "Hosur Road", "Outer Ring Road", "Bellary Road", "Mysore Road", "Non-corridor"]
+        police_stations = ["Yeshwanthpura", "Electronic City", "Whitefield", "Hebbal", "Kengeri", "Unknown"]
+        corridor = corridors[i % len(corridors)]
+        police_station = police_stations[i % len(police_stations)]
+        
+        hour = 8 if i % 2 == 0 else 18  # Peak hours mostly
+        day_of_week = 1 if i % 7 < 5 else 6  # weekday vs weekend
+        
         # Simulated learning curve: error decreases over index
         pred_dur = 30 + (i * 8) % 120
         # Early indices have high deviation, later indices have low deviation
@@ -140,7 +164,15 @@ def init_feedback_database():
             "actual_barricades": int(actual_barricades),
             "diversion_effective": "yes" if rating >= 3 else "no",
             "rating": rating,
-            "timestamp": f"2026-06-{10 + (i // 2)}T10:30:00Z"
+            "timestamp": f"2026-06-{10 + (i // 2)}T10:30:00Z",
+            # Additional features for closed-loop retraining
+            "event_type": event_type,
+            "requires_road_closure": requires_road_closure,
+            "priority": priority,
+            "corridor": corridor,
+            "police_station": police_station,
+            "hour": hour,
+            "day_of_week": day_of_week
         })
         
     with open(FEEDBACK_FILE, "w") as f:
@@ -173,6 +205,15 @@ class FeedbackRequest(BaseModel):
     actual_barricades: int
     diversion_effective: str
     rating: int
+    
+    # Feature columns for closed-loop retraining
+    event_type: str = "unplanned"
+    requires_road_closure: bool = False
+    priority: str = "Low"
+    corridor: str = "Non-corridor"
+    police_station: str = "Unknown"
+    hour: int = 12
+    day_of_week: int = 1
 
 # Removed deprecated on_event startup block as it is moved to lifespan context manager.
 
@@ -332,17 +373,30 @@ def predict_mitigation(req: PredictionRequest):
         
     # Build diversion map plan
     diversion_points = []
-    # Generate coordinates offset from the event coordinates for visual diversion points on Leaflet map
+    # Try to use actual coordinates of the junction, fallback to visual offset if not available
     for i, junc in enumerate(suggested_junctions[:2]):
-        angle = i * np.pi + np.random.rand() * 0.5
-        dist = 0.005 + (i * 0.003)
-        div_lat = req.latitude + dist * np.sin(angle)
-        div_lng = req.longitude + dist * np.cos(angle)
+        div_lat = None
+        div_lng = None
+        role_desc = f"Diversion Point {i+1} - Reroute target"
+        
+        if junction_coords and junc in junction_coords:
+            div_lat = junction_coords[junc].get("lat")
+            div_lng = junction_coords[junc].get("lng")
+            role_desc += f" ({junc} centroid)"
+            
+        if div_lat is None or div_lng is None:
+            # Fallback to visual offset from the event coordinates
+            angle = i * np.pi + np.random.rand() * 0.5
+            dist = 0.005 + (i * 0.003)
+            div_lat = req.latitude + dist * np.sin(angle)
+            div_lng = req.longitude + dist * np.cos(angle)
+            role_desc += " (Estimated offset)"
+            
         diversion_points.append({
             "name": junc,
             "lat": div_lat,
             "lng": div_lng,
-            "role": f"Diversion Point {i+1} - Reroute target"
+            "role": role_desc
         })
         
     return {
@@ -370,8 +424,24 @@ def predict_mitigation(req: PredictionRequest):
         }
     }
 
+def run_retrain_background():
+    try:
+        print("Background retraining triggered...")
+        from model_trainer import train_and_save
+        train_and_save(feedback_path=FEEDBACK_FILE)
+        load_resources()
+        print("Background retraining and reload complete!")
+    except Exception as e:
+        print(f"Error in background retraining: {e}")
+
+@app.post("/api/retrain")
+def trigger_retrain(background_tasks: BackgroundTasks):
+    """Manually triggers model retraining including feedback data"""
+    background_tasks.add_task(run_retrain_background)
+    return {"status": "success", "message": "Retraining task scheduled."}
+
 @app.post("/api/feedback")
-def submit_feedback(req: FeedbackRequest):
+def submit_feedback(req: FeedbackRequest, background_tasks: BackgroundTasks):
     """Appends post-event feedback to database to update learning loop"""
     import datetime
     
@@ -388,7 +458,15 @@ def submit_feedback(req: FeedbackRequest):
         "actual_barricades": req.actual_barricades,
         "diversion_effective": req.diversion_effective,
         "rating": req.rating,
-        "timestamp": datetime.datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+        # Extra features for retraining
+        "event_type": req.event_type,
+        "requires_road_closure": req.requires_road_closure,
+        "priority": req.priority,
+        "corridor": req.corridor,
+        "police_station": req.police_station,
+        "hour": req.hour,
+        "day_of_week": req.day_of_week
     }
     
     # Read existing feedback
@@ -406,7 +484,10 @@ def submit_feedback(req: FeedbackRequest):
     with open(FEEDBACK_FILE, "w") as f:
         json.dump(feedbacks, f, indent=2)
         
-    return {"status": "success", "message": "Post-event learning loop updated successfully."}
+    # Queue background retraining
+    background_tasks.add_task(run_retrain_background)
+        
+    return {"status": "success", "message": "Post-event learning loop updated. Model retraining triggered."}
 
 @app.get("/api/feedback/stats")
 def get_feedback_stats():

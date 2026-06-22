@@ -139,30 +139,12 @@ async function loadMetaDropdowns() {
         corridorSelect.value = "Tumkur Road"; // default choice
         
         // Add listener to station selection to center simulator marker automatically
-        stationSelect.addEventListener("change", async () => {
+        stationSelect.addEventListener("change", () => {
             const station = stationSelect.value;
-            // Get coordinates from static station file if possible
-            const coordsResponse = await fetch(`${API_BASE}/api/meta`);
-            const metaData = await coordsResponse.json();
-            // Fetch center coordinate of the police station
-            const responseStats = await fetch(`${API_BASE}/api/predict`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    event_type: "unplanned",
-                    event_cause: "others",
-                    requires_road_closure: false,
-                    priority: "Low",
-                    corridor: "Non-corridor",
-                    police_station: station,
-                    latitude: 12.9716,
-                    longitude: 77.5946,
-                    hour: 12,
-                    day_of_week: 1
-                })
-            });
-            // We can resolve coordinates by placing a test call or load directly.
-            // Let's call the station mapping directly from models backend.
+            if (meta && meta.station_coords && meta.station_coords[station]) {
+                const coords = meta.station_coords[station];
+                setSimulationLocation(coords.lat, coords.lng);
+            }
         });
         
     } catch (error) {
@@ -551,6 +533,13 @@ async function handleSimulatorSubmit(e) {
         document.getElementById("feed-pred-duration").value = result.predicted_duration_minutes;
         document.getElementById("feed-rec-officers").value = result.manpower.recommended_headcount;
         document.getElementById("feed-rec-barricades").value = result.barricading.recommended_count;
+        document.getElementById("feed-event-type").value = event_type;
+        document.getElementById("feed-requires-road-closure").value = requires_road_closure;
+        document.getElementById("feed-priority").value = priority;
+        document.getElementById("feed-corridor").value = corridor;
+        document.getElementById("feed-police-station").value = police_station;
+        document.getElementById("feed-hour").value = hour;
+        document.getElementById("feed-day-of-week").value = day_of_week;
         
         // Reset Feedback form fields
         document.getElementById("feed-actual-severity").value = result.predicted_severity;
@@ -590,6 +579,14 @@ async function handleFeedbackSubmit(e) {
     const actual_barricades = parseInt(document.getElementById("feed-actual-barricades").value);
     const diversion_effective = document.getElementById("feed-diversion-effective").value;
     
+    const event_type = document.getElementById("feed-event-type").value;
+    const requires_road_closure = document.getElementById("feed-requires-road-closure").value === "true";
+    const priority = document.getElementById("feed-priority").value;
+    const corridor = document.getElementById("feed-corridor").value;
+    const police_station = document.getElementById("feed-police-station").value;
+    const hour = parseInt(document.getElementById("feed-hour").value);
+    const day_of_week = parseInt(document.getElementById("feed-day-of-week").value);
+    
     // Rating calculation from stars
     const ratingRadios = document.getElementsByName("feed-rating");
     let rating = 3;
@@ -602,7 +599,8 @@ async function handleFeedbackSubmit(e) {
     
     const payload = {
         event_id, event_cause, predicted_severity, predicted_duration, recommended_officers, recommended_barricades,
-        actual_severity, actual_duration, actual_officers, actual_barricades, diversion_effective, rating
+        actual_severity, actual_duration, actual_officers, actual_barricades, diversion_effective, rating,
+        event_type, requires_road_closure, priority, corridor, police_station, hour, day_of_week
     };
     
     try {

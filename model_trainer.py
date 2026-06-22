@@ -13,7 +13,7 @@ CSV_PATH = os.path.join(BASE_DIR, "Astram event data_anonymized - Astram event d
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
-def train_and_save():
+def train_and_save(feedback_path=None):
     print("Loading dataset...")
     df = pd.read_csv(CSV_PATH)
     
@@ -33,7 +33,7 @@ def train_and_save():
     print("Computing police station coordinates mapping...")
     station_coords = {}
     valid_coords_df = df.dropna(subset=['latitude', 'longitude'])
-    # Filter coordinates to Bangalore region roughly (lat 12.8 to 13.2, lon 77.4 to 77.8)
+    # Filter coordinates to Bangalore region roughly (lat 12.0 to 14.0, lon 77.0 to 78.5)
     valid_coords_df = valid_coords_df[
         (valid_coords_df['latitude'] > 12.0) & (valid_coords_df['latitude'] < 14.0) &
         (valid_coords_df['longitude'] > 77.0) & (valid_coords_df['longitude'] < 78.5)
@@ -51,6 +51,26 @@ def train_and_save():
     with open(os.path.join(MODEL_DIR, "station_coords.json"), "w") as f:
         json.dump(station_coords, f, indent=2)
     print(f"Saved station coordinates for {len(station_coords)} stations.")
+
+    # Compute average coordinates for each junction
+    print("Computing junction coordinates mapping...")
+    junction_coords = {}
+    valid_junc_df = df.dropna(subset=['latitude', 'longitude', 'junction'])
+    valid_junc_df = valid_junc_df[
+        (valid_junc_df['latitude'] > 12.0) & (valid_junc_df['latitude'] < 14.0) &
+        (valid_junc_df['longitude'] > 77.0) & (valid_junc_df['longitude'] < 78.5)
+    ]
+    junction_grouped = valid_junc_df.groupby('junction')
+    for junction, group in junction_grouped:
+        junction_coords[junction] = {
+            "lat": float(group['latitude'].mean()),
+            "lng": float(group['longitude'].mean())
+        }
+    
+    # Save junction coordinates mapping
+    with open(os.path.join(MODEL_DIR, "junction_coords.json"), "w") as f:
+        json.dump(junction_coords, f, indent=2)
+    print(f"Saved junction coordinates for {len(junction_coords)} junctions.")
 
     # Feature extraction
     df['hour'] = df['start_datetime'].dt.hour
@@ -99,21 +119,62 @@ def train_and_save():
             
     df['congestion_severity'] = df['congestion_score'].apply(get_severity)
     
+    # Prepare classifier dataset
+    df_clf = df.copy()
+    df_clf['is_feedback'] = False
+    
+    # Load feedback rows
+    feedback_df = None
+    if feedback_path and os.path.exists(feedback_path):
+        try:
+            with open(feedback_path, 'r') as f:
+                feedbacks = json.load(f)
+            if feedbacks:
+                feedback_df = pd.DataFrame(feedbacks)
+                print(f"Loaded {len(feedback_df)} feedback rows for retraining.")
+                
+                # Standardize columns
+                if 'actual_severity' in feedback_df.columns:
+                    feedback_df['congestion_severity'] = feedback_df['actual_severity']
+                if 'actual_duration' in feedback_df.columns:
+                    feedback_df['duration_min'] = feedback_df['actual_duration']
+                if 'hour' in feedback_df.columns:
+                    feedback_df['is_peak_hour'] = feedback_df['hour'].isin([8, 9, 10, 11, 17, 18, 19, 20]).astype(int)
+                
+                # Fill missing features with defaults
+                feedback_df['event_type'] = feedback_df.get('event_type', pd.Series('unplanned', index=feedback_df.index)).fillna('unplanned')
+                feedback_df['event_cause'] = feedback_df.get('event_cause', pd.Series('others', index=feedback_df.index)).fillna('others')
+                feedback_df['requires_road_closure'] = feedback_df.get('requires_road_closure', pd.Series(False, index=feedback_df.index)).fillna(False).astype(bool)
+                feedback_df['priority'] = feedback_df.get('priority', pd.Series('Low', index=feedback_df.index)).fillna('Low')
+                feedback_df['corridor'] = feedback_df.get('corridor', pd.Series('Non-corridor', index=feedback_df.index)).fillna('Non-corridor')
+                feedback_df['police_station'] = feedback_df.get('police_station', pd.Series('Unknown', index=feedback_df.index)).fillna('Unknown')
+                feedback_df['hour'] = feedback_df.get('hour', pd.Series(12, index=feedback_df.index)).fillna(12).astype(int)
+                feedback_df['day_of_week'] = feedback_df.get('day_of_week', pd.Series(1, index=feedback_df.index)).fillna(1).astype(int)
+        except Exception as e:
+            print(f"Error loading feedback file: {e}")
+            
+    if feedback_df is not None and len(feedback_df) > 0:
+        feedback_df_clf = feedback_df.dropna(subset=['congestion_severity']).copy()
+        feedback_df_clf['is_feedback'] = True
+        combined_clf_df = pd.concat([df_clf, feedback_df_clf], ignore_index=True)
+    else:
+        combined_clf_df = df_clf
+    
     # Define categorical features to encode
     categorical_features = ['event_type', 'event_cause', 'priority', 'corridor', 'police_station']
     
     # We will fit encoders and save them
     encoders = {}
-    X_encoded = df.copy()
+    X_encoded = combined_clf_df.copy()
     
     for col in categorical_features:
         le = LabelEncoder()
         # Add a placeholder for unseen labels during prediction
-        unique_vals = list(df[col].astype(str).unique())
+        unique_vals = list(combined_clf_df[col].astype(str).unique())
         if 'Unknown' not in unique_vals:
             unique_vals.append('Unknown')
         le.fit(unique_vals)
-        X_encoded[col] = le.transform(df[col].astype(str))
+        X_encoded[col] = le.transform(combined_clf_df[col].astype(str))
         encoders[col] = le
         
     # Save encoders
@@ -124,28 +185,72 @@ def train_and_save():
     feature_cols = ['event_type', 'event_cause', 'requires_road_closure', 'priority', 'corridor', 'police_station', 'hour', 'day_of_week', 'is_peak_hour']
     
     X_clf = X_encoded[feature_cols].copy()
-    y_clf = df['congestion_severity']
+    y_clf = combined_clf_df['congestion_severity']
+    is_feedback_clf = X_encoded.get('is_feedback', pd.Series(False, index=X_clf.index))
+    weights_clf = np.where(is_feedback_clf, 10.0, 1.0)
     
+    # Proper Train/Test split for evaluation
+    stratify_target = y_clf if (y_clf.value_counts() >= 2).all() else None
+    X_train, X_test, y_train, y_test, w_train, w_test = train_test_split(
+        X_clf, y_clf, weights_clf, test_size=0.2, random_state=42, stratify=stratify_target
+    )
+    
+    clf_eval = RandomForestClassifier(n_estimators=100, random_state=42)
+    clf_eval.fit(X_train, y_train, sample_weight=w_train)
+    test_acc = clf_eval.score(X_test, y_test)
+    print(f"Severity Classifier - Evaluation TEST Accuracy: {test_acc:.4f}")
+    
+    # Refit on all data for final deployed model
     clf = RandomForestClassifier(n_estimators=100, random_state=42)
-    clf.fit(X_clf, y_clf)
+    clf.fit(X_clf, y_clf, sample_weight=weights_clf)
     joblib.dump(clf, os.path.join(MODEL_DIR, "severity_classifier.joblib"))
-    print(f"Severity Classifier trained. Accuracy: {clf.score(X_clf, y_clf):.4f}")
+    print(f"Severity Classifier trained on all data. Accuracy on entire set: {clf.score(X_clf, y_clf):.4f}")
     
     # 2. Train Event Duration Regressor
     # Get subset with valid durations (outliers filtered)
     sub_df = df.dropna(subset=['closed_datetime']).copy()
     sub_df['duration_min'] = (sub_df['closed_datetime'] - sub_df['start_datetime']).dt.total_seconds() / 60.0
     sub_df = sub_df[(sub_df['duration_min'] > 0) & (sub_df['duration_min'] < 2880)] # Cap at 48 hours
+    sub_df['is_feedback'] = False
     
-    if len(sub_df) > 0:
-        sub_encoded = X_encoded.loc[sub_df.index].copy()
-        X_reg = sub_encoded[feature_cols].copy()
-        y_reg = sub_df['duration_min']
+    if feedback_df is not None and len(feedback_df) > 0:
+        feedback_df_reg = feedback_df.dropna(subset=['duration_min']).copy()
+        feedback_df_reg['is_feedback'] = True
+        combined_reg_df = pd.concat([sub_df, feedback_df_reg], ignore_index=True)
+    else:
+        combined_reg_df = sub_df
         
+    if len(combined_reg_df) > 0:
+        # We need to encode the categories for combined_reg_df
+        sub_encoded = combined_reg_df.copy()
+        for col in categorical_features:
+            le = encoders[col]
+            sub_encoded[col] = sub_encoded[col].astype(str).apply(
+                lambda x: le.transform([x])[0] if x in le.classes_ else le.transform(['Unknown'])[0]
+            )
+            
+        X_reg = sub_encoded[feature_cols].copy()
+        y_reg = combined_reg_df['duration_min']
+        is_feedback_reg = sub_encoded.get('is_feedback', pd.Series(False, index=X_reg.index))
+        weights_reg = np.where(is_feedback_reg, 10.0, 1.0)
+        
+        # Proper Train/Test split for evaluation
+        X_reg_train, X_reg_test, y_reg_train, y_reg_test, w_reg_train, w_reg_test = train_test_split(
+            X_reg, y_reg, weights_reg, test_size=0.2, random_state=42
+        )
+        
+        reg_eval = RandomForestRegressor(n_estimators=100, random_state=42)
+        reg_eval.fit(X_reg_train, y_reg_train, sample_weight=w_reg_train)
+        test_r2 = reg_eval.score(X_reg_test, y_reg_test)
+        from sklearn.metrics import mean_absolute_error
+        test_mae = mean_absolute_error(y_reg_test, reg_eval.predict(X_reg_test))
+        print(f"Duration Regressor - Evaluation TEST R2 score: {test_r2:.4f}, MAE: {test_mae:.4f} min")
+        
+        # Refit on all data for final deployed model
         reg = RandomForestRegressor(n_estimators=100, random_state=42)
-        reg.fit(X_reg, y_reg)
+        reg.fit(X_reg, y_reg, sample_weight=weights_reg)
         joblib.dump(reg, os.path.join(MODEL_DIR, "duration_regressor.joblib"))
-        print(f"Duration Regressor trained on {len(sub_df)} rows. R2 score: {reg.score(X_reg, y_reg):.4f}")
+        print(f"Duration Regressor trained on {len(combined_reg_df)} rows. R2 score on entire set: {reg.score(X_reg, y_reg):.4f}")
     else:
         # Fallback empty model or standard model
         print("Warning: No valid durations found for regressor!")
@@ -162,7 +267,9 @@ def train_and_save():
         "corridors": sorted(list(df['corridor'].astype(str).unique())),
         "event_causes": sorted(list(df['event_cause'].astype(str).unique())),
         "event_types": sorted(list(df['event_type'].astype(str).unique())),
-        "junctions": sorted(list(df['junction'].dropna().astype(str).unique()))
+        "junctions": sorted(list(df['junction'].dropna().astype(str).unique())),
+        "station_coords": station_coords,
+        "junction_coords": junction_coords
     }
     with open(os.path.join(MODEL_DIR, "meta_info.json"), "w") as f:
         json.dump(meta_info, f, indent=2)

@@ -1,0 +1,1174 @@
+{
+  "17th Mn 1st Crs Aishwarya Stores Jn": {
+    "lat": 12.9250436,
+    "lng": 77.6336263
+  },
+  "27th Cross Jayanagar(Ganapathi Temple)": {
+    "lat": 12.9317517,
+    "lng": 77.5797388
+  },
+  "28thMainJayanagarJunc": {
+    "lat": 12.9168331,
+    "lng": 77.59537391666667
+  },
+  "29thMainRdBTM LayoutJunc": {
+    "lat": 12.916209779999999,
+    "lng": 77.61614313999999
+  },
+  "5thMainHSR": {
+    "lat": 12.916451233333333,
+    "lng": 77.63131656666665
+  },
+  "5thMainRPC Layout-Vijayanagar": {
+    "lat": 12.9657814,
+    "lng": 77.53542256666667
+  },
+  "A S CharStreet-MysoreRdJunc": {
+    "lat": 12.964810120000001,
+    "lng": 77.57389456000001
+  },
+  "ASC Junction": {
+    "lat": 12.966569033333334,
+    "lng": 77.62054773333334
+  },
+  "AdugodiJunc": {
+    "lat": 12.942809950000001,
+    "lng": 77.60780145000001
+  },
+  "AgaraJunction": {
+    "lat": 12.923731916666668,
+    "lng": 77.64970595000001
+  },
+  "AnandRaoJunction": {
+    "lat": 12.9813513,
+    "lng": 77.57418408571428
+  },
+  "AnepalyaJunc": {
+    "lat": 12.9516324,
+    "lng": 77.60532316
+  },
+  "AnilKumbleCircle": {
+    "lat": 12.97636365,
+    "lng": 77.6015210625
+  },
+  "AnjaneyaTempleJunc": {
+    "lat": 12.981286866666666,
+    "lng": 77.63094503333333
+  },
+  "ArakereGateJunc": {
+    "lat": 12.89058956666667,
+    "lng": 77.59770875333334
+  },
+  "Arbindo Circle": {
+    "lat": 12.91728056,
+    "lng": 77.585654
+  },
+  "Arts&CraftsCircle": {
+    "lat": 12.9753296,
+    "lng": 77.6073261
+  },
+  "AshirwadamCircle": {
+    "lat": 12.971060399999999,
+    "lng": 77.60420058
+  },
+  "Ashoknagar Junction(ShoolayCircle)": {
+    "lat": 12.966321083333332,
+    "lng": 77.60641865000001
+  },
+  "AttiguppeCircleJunction": {
+    "lat": 12.9621302,
+    "lng": 77.5335461
+  },
+  "AyyappaTempleJunc": {
+    "lat": 12.923716187142857,
+    "lng": 77.6186623187755
+  },
+  "BDA Junctio-Koramangala": {
+    "lat": 12.931545133333332,
+    "lng": 77.62268249
+  },
+  "BEL Circle": {
+    "lat": 13.044356544000003,
+    "lng": 77.55585414400001
+  },
+  "BEML GateJunc(SuranjandasRd)": {
+    "lat": 12.9692543,
+    "lng": 77.65860705
+  },
+  "BHEL Gate": {
+    "lat": 12.8461033,
+    "lng": 77.6589267
+  },
+  "BM ShriJunc(CMH-100FtRd)Junc": {
+    "lat": 12.978526593333333,
+    "lng": 77.64130376666667
+  },
+  "BMTCJunction-K H Road": {
+    "lat": 12.956739224444444,
+    "lng": 77.59288942444444
+  },
+  "BTM16thMain-ORR Junc": {
+    "lat": 12.916279166666664,
+    "lng": 77.6097492
+  },
+  "BagalakunteCrossJunction": {
+    "lat": 13.0599505,
+    "lng": 77.5068564
+  },
+  "BagalurCrossJunc": {
+    "lat": 13.122025955555557,
+    "lng": 77.61086333333333
+  },
+  "Bamboobazar(Shivajinagar)": {
+    "lat": 12.9930158,
+    "lng": 77.60516129999999
+  },
+  "BanashankariBusStandJunc": {
+    "lat": 12.916812720000001,
+    "lng": 77.57257235363637
+  },
+  "BangaloreBodyBuildersJunc": {
+    "lat": 12.959079889473685,
+    "lng": 77.55549174210527
+  },
+  "Basappa Circle Junction": {
+    "lat": 12.957186906666665,
+    "lng": 77.57678725333334
+  },
+  "BasavamantapaJunc-Dr RajkumarRd": {
+    "lat": 12.9802019,
+    "lng": 77.55618905
+  },
+  "BasaweshwaraCircle": {
+    "lat": 12.984270700000001,
+    "lng": 77.5886019
+  },
+  "Basveshwarnagar 8th main Junction": {
+    "lat": 12.99274321,
+    "lng": 77.53414506
+  },
+  "Batrayanapura(Amrutahalli)Junction": {
+    "lat": 13.067096859285714,
+    "lng": 77.59289248
+  },
+  "BegumMahalJunc": {
+    "lat": 12.9757196,
+    "lng": 77.620183425
+  },
+  "Bellandur Junction, Outer ring road": {
+    "lat": 12.926606866666667,
+    "lng": 77.67833689999999
+  },
+  "BhadrappaLayout": {
+    "lat": 13.0466962,
+    "lng": 77.57735149999999
+  },
+  "BhashyamCircle": {
+    "lat": 12.985037199999999,
+    "lng": 77.55434766666667
+  },
+  "BhashyamCircle-SadashivNagar": {
+    "lat": 13.0071179,
+    "lng": 77.57946305
+  },
+  "BigBazaar(Whitefield)Junc": {
+    "lat": 12.98810970125,
+    "lng": 77.733229935
+  },
+  "BigBazaarJunction(OldMadrasRd)": {
+    "lat": 12.991387184615386,
+    "lng": 77.65742077692309
+  },
+  "BilekahalliJunc": {
+    "lat": 12.900502092857142,
+    "lng": 77.6009497642857
+  },
+  "BinnyMillJunction": {
+    "lat": 12.970068857142858,
+    "lng": 77.56797037142857
+  },
+  "BiryandCircle": {
+    "lat": 12.964113825,
+    "lng": 77.57010735
+  },
+  "BloodBankCircle": {
+    "lat": 12.962145634,
+    "lng": 77.594476038
+  },
+  "Bommanahalli": {
+    "lat": 12.906963534615384,
+    "lng": 77.62816493076923
+  },
+  "BrigadeMillenium": {
+    "lat": 12.8933772,
+    "lng": 77.5851856
+  },
+  "BucheryJunction": {
+    "lat": 12.952048127272729,
+    "lng": 77.62148546363638
+  },
+  "CID-CarltonHouseJunc": {
+    "lat": 12.9803552,
+    "lng": 77.58636318888888
+  },
+  "CIL CrossJunction-JayamahalRd": {
+    "lat": 13.00907855,
+    "lng": 77.59168475
+  },
+  "CMH Rd-AdarshTheaterJunc": {
+    "lat": 12.978331579999999,
+    "lng": 77.62877914
+  },
+  "CMP GateJunc": {
+    "lat": 12.957914185000002,
+    "lng": 77.60585476
+  },
+  "CashPharmacyJunction": {
+    "lat": 12.966028399999999,
+    "lng": 77.5997593
+  },
+  "ChandraLayoutJunc-nearWaterTank": {
+    "lat": 12.960020400000001,
+    "lng": 77.52715265
+  },
+  "ChandrikaJunction": {
+    "lat": 12.99138545,
+    "lng": 77.59245085
+  },
+  "ChaudrayaCircle/UdayaTVCircle(CantonmentJunc)": {
+    "lat": 12.994135485714285,
+    "lng": 77.59563775714285
+  },
+  "Chokasandra (Tumkur road)": {
+    "lat": 13.042173135714288,
+    "lng": 77.51471048571429
+  },
+  "CholurpalyaJunction(MagadiRd)": {
+    "lat": 12.973764150000001,
+    "lng": 77.5500964
+  },
+  "CoffeeBoardJunc": {
+    "lat": 12.9832485,
+    "lng": 77.5956467
+  },
+  "ColesParkJunc": {
+    "lat": 12.9928238,
+    "lng": 77.6096432
+  },
+  "CommandoHospitalJunc": {
+    "lat": 12.966296783333334,
+    "lng": 77.62450715
+  },
+  "D'SouzaCircle": {
+    "lat": 12.9671612,
+    "lng": 77.610776025
+  },
+  "DMRoadJunc(Basavangudi)": {
+    "lat": 12.943615,
+    "lng": 77.5722
+  },
+  "DairyCircle": {
+    "lat": 12.936367480000001,
+    "lng": 77.6029089
+  },
+  "Delmia-Jayanagar": {
+    "lat": 12.906240366666665,
+    "lng": 77.59390086666666
+  },
+  "Devanahalli new bus stand": {
+    "lat": 13.2483559,
+    "lng": 77.7156178
+  },
+  "DevanahalliCrossJunc": {
+    "lat": 13.24167865,
+    "lng": 77.70356475
+  },
+  "DevangaHostelJunction": {
+    "lat": 12.963187976,
+    "lng": 77.588957566
+  },
+  "Devasandra(k r puram)": {
+    "lat": 13.009462570000002,
+    "lng": 77.69615677333334
+  },
+  "DevegowdaPetrolBunkJunc": {
+    "lat": 12.92073005,
+    "lng": 77.56126234999999
+  },
+  "Deverabeesanahalli-ORR Junc": {
+    "lat": 12.930817606666666,
+    "lng": 77.68505383333334
+  },
+  "DhobiGhatJunc": {
+    "lat": 12.98687955857143,
+    "lng": 77.55060211714286
+  },
+  "DickensonRd-AdigasJunc": {
+    "lat": 12.9796588,
+    "lng": 77.613821
+  },
+  "DoddaballapuraCrossJunc": {
+    "lat": 13.2572493,
+    "lng": 77.7125229
+  },
+  "DomlurWaterTank": {
+    "lat": 12.961040745,
+    "lng": 77.63887486666667
+  },
+  "Dr RajkumarRd-10thCrossRdJunc": {
+    "lat": 13.007386059999998,
+    "lng": 77.55402936
+  },
+  "Dr TCM RoyanRd near AmbedkarStatue": {
+    "lat": 12.965154890909092,
+    "lng": 77.56805897272729
+  },
+  "ESI(k r puram)": {
+    "lat": 12.9930024,
+    "lng": 77.7063512
+  },
+  "ElectronicCityGate-2Junc": {
+    "lat": 12.855327033333333,
+    "lng": 77.66495455
+  },
+  "EliteJunc": {
+    "lat": 12.976210316666668,
+    "lng": 77.57514844999999
+  },
+  "FTI Junction(KanteeravaStudio)": {
+    "lat": 13.021223754545453,
+    "lng": 77.53143259090909
+  },
+  "Fire Force Junction": {
+    "lat": 12.98076095,
+    "lng": 77.5495049
+  },
+  "GangammagudiJunc": {
+    "lat": 13.056797616666666,
+    "lng": 77.54662863333333
+  },
+  "GarebhavipalyaJunc": {
+    "lat": 12.893795219999998,
+    "lng": 77.63690847000001
+  },
+  "Geeta Circle": {
+    "lat": 12.9285748,
+    "lng": 77.5861157
+  },
+  "Geethanjali jn": {
+    "lat": 13.002918300000001,
+    "lng": 77.57109990000001
+  },
+  "GokuldasImagesJunc": {
+    "lat": 13.030656107142855,
+    "lng": 77.53642285714287
+  },
+  "GopalGowdaJUnc": {
+    "lat": 12.9785487,
+    "lng": 77.5911902
+  },
+  "GorappanapalyaJunction": {
+    "lat": 12.920906,
+    "lng": 77.6002661
+  },
+  "GoruguntepalyaJunc": {
+    "lat": 13.029651719999999,
+    "lng": 77.540355135
+  },
+  "GovindapuraCross": {
+    "lat": 13.032092,
+    "lng": 77.6216355
+  },
+  "GowdanapalyaJunction": {
+    "lat": 12.9135866,
+    "lng": 77.5590245
+  },
+  "HSR14thMainJunc": {
+    "lat": 12.91803727,
+    "lng": 77.63877112333334
+  },
+  "HainsJunc": {
+    "lat": 12.9941844,
+    "lng": 77.60665671666666
+  },
+  "HalliThindi": {
+    "lat": 12.943953533333334,
+    "lng": 77.56790193333335
+  },
+  "HebbalFlyoverJunc": {
+    "lat": 13.042259164999999,
+    "lng": 77.59092162321429
+  },
+  "HennurRd-DavisRdJunction": {
+    "lat": 13.003096034999999,
+    "lng": 77.620384175
+  },
+  "HennurRoad-ORR Junc": {
+    "lat": 13.029220700000002,
+    "lng": 77.63169948235294
+  },
+  "HesaraghattaJunction": {
+    "lat": 13.045215853333334,
+    "lng": 77.50743217666667
+  },
+  "HoodiJunction": {
+    "lat": 12.992635916666666,
+    "lng": 77.71575451666666
+  },
+  "HopefarmJunction": {
+    "lat": 12.984359663000001,
+    "lng": 77.752452978
+  },
+  "HoramavuJunction": {
+    "lat": 13.018759941666668,
+    "lng": 77.65638329166666
+  },
+  "HosmatJunction": {
+    "lat": 12.968480066666666,
+    "lng": 77.61442303333334
+  },
+  "HudsonCircle": {
+    "lat": 12.967816446666667,
+    "lng": 77.59041790666667
+  },
+  "HulimaveRd-BanneraghattaRdJunc": {
+    "lat": 12.881814533333333,
+    "lng": 77.59606995555556
+  },
+  "HunsemarammanahalliJunction": {
+    "lat": 13.142240485714286,
+    "lng": 77.61770735714286
+  },
+  "ISRO Junction-Airport rd": {
+    "lat": 12.95924701111111,
+    "lng": 77.65546522222223
+  },
+  "ISRO Junction-NewBEL Rd": {
+    "lat": 13.0351175,
+    "lng": 77.5677308
+  },
+  "IbblurJunction'": {
+    "lat": 12.921296843076922,
+    "lng": 77.66464258384616
+  },
+  "IndianExpressJunction": {
+    "lat": 12.984153818749999,
+    "lng": 77.59736211250001
+  },
+  "Indiranasgar13thMainJunc": {
+    "lat": 12.966776190000001,
+    "lng": 77.641548645
+  },
+  "ItmaduJunction": {
+    "lat": 12.92794845,
+    "lng": 77.54645538333334
+  },
+  "J D MaraJunc": {
+    "lat": 12.907161833333333,
+    "lng": 77.6010555
+  },
+  "JP Nagar 15th cross junction": {
+    "lat": 12.906214328571426,
+    "lng": 77.58573547142858
+  },
+  "JP Nagar 9th cross-24th main jn": {
+    "lat": 12.911875760000001,
+    "lng": 77.58611252
+  },
+  "JaiMuniRaoCircle": {
+    "lat": 12.978470042000001,
+    "lng": 77.543288764
+  },
+  "Jaipuria-Adugodi": {
+    "lat": 12.935063149999998,
+    "lng": 77.62434095
+  },
+  "JakkurCrossJunction": {
+    "lat": 13.073616027777778,
+    "lng": 77.59285452777777
+  },
+  "JalahalliCross(SM Circle)": {
+    "lat": 13.0400894125,
+    "lng": 77.518302096875
+  },
+  "JayadevaHospitalJunc": {
+    "lat": 12.915537875000002,
+    "lng": 77.6001182625
+  },
+  "Jayanagar 4th main,36th cross": {
+    "lat": 12.9225838,
+    "lng": 77.5803166
+  },
+  "JohnsonMarket": {
+    "lat": 12.962821266666667,
+    "lng": 77.60661306666667
+  },
+  "K G Junction": {
+    "lat": 12.9751381,
+    "lng": 77.5764764
+  },
+  "K H Road-SiddaiahRdJunc(BMTC-BigBazaar)": {
+    "lat": 12.952732066666668,
+    "lng": 77.59074646666667
+  },
+  "K R Circle": {
+    "lat": 12.97671727,
+    "lng": 77.58600218333332
+  },
+  "K R MarketJunction": {
+    "lat": 12.963904757142858,
+    "lng": 77.578336
+  },
+  "KCG HospitalJunction": {
+    "lat": 12.99931805,
+    "lng": 77.57141139999999
+  },
+  "KHB Junction": {
+    "lat": 12.9807626,
+    "lng": 77.5366494
+  },
+  "KIMCO Junction": {
+    "lat": 12.95114001903226,
+    "lng": 77.53800328
+  },
+  "KR Road-14thCross Junc": {
+    "lat": 12.929715,
+    "lng": 77.573648
+  },
+  "KadirenahalliJunction": {
+    "lat": 12.916272925000001,
+    "lng": 77.565058
+  },
+  "Kadubeesanahalli-ORR Junc": {
+    "lat": 12.93946662083333,
+    "lng": 77.69618835916667
+  },
+  "KalyanNagar-ORR Junc": {
+    "lat": 13.024157833333334,
+    "lng": 77.64375153333334
+  },
+  "KamakyaJunction": {
+    "lat": 12.9233939,
+    "lng": 77.5542916
+  },
+  "Kammanahalli-RingRoadJunction": {
+    "lat": 13.026446400000001,
+    "lng": 77.63677685
+  },
+  "KamrajRdJunction": {
+    "lat": 12.97709826,
+    "lng": 77.6089381
+  },
+  "KanakapuraRd-RingRdJunction": {
+    "lat": 12.9058921125,
+    "lng": 77.5732325125
+  },
+  "KarnatakaBhavanJunction": {
+    "lat": 12.98137597875,
+    "lng": 77.56474577625
+  },
+  "KatriguppeJunction": {
+    "lat": 12.9254345525,
+    "lng": 77.54992262166667
+  },
+  "KensingtonOvalJunc": {
+    "lat": 12.9821285,
+    "lng": 77.6236031
+  },
+  "KhodaysCircle(DV UrsCircle)": {
+    "lat": 12.980188352173913,
+    "lng": 77.57155901739131
+  },
+  "KodigehalliCross": {
+    "lat": 13.055506881818182,
+    "lng": 77.59384458181817
+  },
+  "KogilluCrossJunc": {
+    "lat": 13.104882479999999,
+    "lng": 77.60111568666666
+  },
+  "KonanakunteJunction(KanakapurarRd)": {
+    "lat": 12.890109883333333,
+    "lng": 77.56420415000001
+  },
+  "KoramangalaWaterTankJunc": {
+    "lat": 12.927339958620692,
+    "lng": 77.6209728
+  },
+  "KrishnaFlourMill": {
+    "lat": 12.98482,
+    "lng": 77.57315898235295
+  },
+  "Krupanidhi College": {
+    "lat": 12.92466734,
+    "lng": 77.62763722
+  },
+  "Kudlu Gate Junc": {
+    "lat": 12.889438966666667,
+    "lng": 77.6394545
+  },
+  "KundanahalliGateJunc": {
+    "lat": 12.95587968,
+    "lng": 77.716614104
+  },
+  "KuvempuCircle": {
+    "lat": 13.044634299999998,
+    "lng": 77.56207
+  },
+  "KuvempuCircleJunc,HAL MainGate": {
+    "lat": 12.958055,
+    "lng": 77.668315
+  },
+  "LRDE Junction": {
+    "lat": 12.987409266666667,
+    "lng": 77.5881116111111
+  },
+  "LalbaghMainGateJunc": {
+    "lat": 12.953932666666667,
+    "lng": 77.58566405
+  },
+  "LalbaghWestGate": {
+    "lat": 12.9483534,
+    "lng": 77.5797302
+  },
+  "LeprosyhospitalJunc": {
+    "lat": 12.975497837999999,
+    "lng": 77.5642113695
+  },
+  "LinkRoadMalleswaramJunc": {
+    "lat": 12.9928565,
+    "lng": 77.57435053333334
+  },
+  "LowerAgaram(IndiaGarage)Junc": {
+    "lat": 12.964487366666667,
+    "lng": 77.61810673333333
+  },
+  "MC Circle": {
+    "lat": 12.976117833333333,
+    "lng": 77.54777961666667
+  },
+  "MICO Bande": {
+    "lat": 12.945653433333334,
+    "lng": 77.60280531666666
+  },
+  "MS RamaiahJunc(TollGate)": {
+    "lat": 13.017081354545455,
+    "lng": 77.56076145454546
+  },
+  "MSRamaiahHospitalJunc": {
+    "lat": 13.0278807,
+    "lng": 77.5742038
+  },
+  "MahalaxmiLayoutEntranceJunc": {
+    "lat": 13.009674380000002,
+    "lng": 77.54884394
+  },
+  "MaharajaJunction": {
+    "lat": 12.93436245,
+    "lng": 77.6296954
+  },
+  "Malleswaram18thCrossRd-SampigeRdJunc": {
+    "lat": 13.008669560000001,
+    "lng": 77.57150302
+  },
+  "ManipalCentreJunc": {
+    "lat": 12.975913349999999,
+    "lng": 77.61298679999999
+  },
+  "MaratahalliBridgeJunc": {
+    "lat": 12.95636516875,
+    "lng": 77.70061835
+  },
+  "MarenahalliRd-18thMainRdJunc": {
+    "lat": 12.9186031,
+    "lng": 77.58915404999999
+  },
+  "MargosaRd-18thCrossJunc": {
+    "lat": 13.011095099999999,
+    "lng": 77.56933845
+  },
+  "Marigowda-TavarkereRdJunc": {
+    "lat": 12.935763999999999,
+    "lng": 77.60780676153844
+  },
+  "MayohallJunction": {
+    "lat": 12.973328760000001,
+    "lng": 77.61061404
+  },
+  "MeenakshiMallJunc": {
+    "lat": 12.876471425,
+    "lng": 77.59513195
+  },
+  "MekhriCircle": {
+    "lat": 13.014601660937501,
+    "lng": 77.58398061015625
+  },
+  "MillCornerRd-SampigeRdJunc": {
+    "lat": 12.99226608888889,
+    "lng": 77.5714538
+  },
+  "Minerva Circle": {
+    "lat": 12.9549542,
+    "lng": 77.58042775
+  },
+  "MinskSquare(CTO Junction)": {
+    "lat": 12.9816874725,
+    "lng": 77.59743405750001
+  },
+  "MintoJunction": {
+    "lat": 12.960096060000001,
+    "lng": 77.57199944
+  },
+  "ModiBridgeJunction": {
+    "lat": 12.998804033333334,
+    "lng": 77.5498981
+  },
+  "ModiHospital": {
+    "lat": 12.9975256,
+    "lng": 77.5470383
+  },
+  "MotherTeressaCircle": {
+    "lat": 12.966578086363636,
+    "lng": 77.60897399272727
+  },
+  "MysoreRd--MadhuPetrolBunkJunction": {
+    "lat": 12.912233975,
+    "lng": 77.48536440000001
+  },
+  "MysoreRd-RingRdJunc(Nayandanahallii)": {
+    "lat": 12.944655181111111,
+    "lng": 77.5274530561111
+  },
+  "N R SquareJunc": {
+    "lat": 12.96546108,
+    "lng": 77.58656263
+  },
+  "NCERT Junction": {
+    "lat": 12.9318961,
+    "lng": 77.5445289
+  },
+  "NGV RearGateJunc": {
+    "lat": 12.9424581,
+    "lng": 77.62256595
+  },
+  "NIMHANS Junction": {
+    "lat": 12.940403733333335,
+    "lng": 77.5977461
+  },
+  "NTTF JunctionPeenya": {
+    "lat": 13.0248685,
+    "lng": 77.51113294999999
+  },
+  "NagaTheaterJunc-Ulsoor": {
+    "lat": 12.9897527,
+    "lng": 77.6180398
+  },
+  "NaganathapuraJunction": {
+    "lat": 12.870339716666669,
+    "lng": 77.65300454166666
+  },
+  "Nagarbhavi": {
+    "lat": 12.958794555555556,
+    "lng": 77.51788084444445
+  },
+  "Nagavara-ORR Junction": {
+    "lat": 13.039577543333335,
+    "lng": 77.62418356866667
+  },
+  "NandiCross(RaniCross)": {
+    "lat": 13.265405000000001,
+    "lng": 77.71870396666667
+  },
+  "Narayanapura cross, Hegde nagar": {
+    "lat": 13.070610266666668,
+    "lng": 77.63455979999999
+  },
+  "NationalCollege": {
+    "lat": 12.9516353,
+    "lng": 77.5736202
+  },
+  "NavarangBarJunc-Dr RajkumarRd": {
+    "lat": 12.9878558,
+    "lng": 77.5597174
+  },
+  "NavarangTheatreJunction": {
+    "lat": 12.998095366666666,
+    "lng": 77.55275656666667
+  },
+  "OldMadrasRd-80FeetRdJunc": {
+    "lat": 12.985833575000001,
+    "lng": 77.645409175
+  },
+  "OldMadrasRd-BMTC DepotJunc": {
+    "lat": 12.9825565,
+    "lng": 77.6353914
+  },
+  "OldMadrasRd-DoubleRdJunc": {
+    "lat": 12.98281526,
+    "lng": 77.6375072
+  },
+  "OldMadrasRd-Indranagar100ftRdJunc": {
+    "lat": 12.984076591666666,
+    "lng": 77.64112288333332
+  },
+  "OldMadrasRd-NGEF Junc": {
+    "lat": 12.9867540125,
+    "lng": 77.64830568375001
+  },
+  "OldMadrasRd-SuddaguntepalyaRdJunc": {
+    "lat": 12.989704000000001,
+    "lng": 77.65383403333333
+  },
+  "OldPoliceStation-Ashoknagar": {
+    "lat": 12.9683707,
+    "lng": 77.60624623999999
+  },
+  "OperaHouseJunc": {
+    "lat": 12.971986748333334,
+    "lng": 77.60712471333333
+  },
+  "PES-DevegowdaCircle": {
+    "lat": 12.937722010000002,
+    "lng": 77.53334387999999
+  },
+  "Peenya14thCrossJunc": {
+    "lat": 13.0166142,
+    "lng": 77.5054464
+  },
+  "Peenya2ndStageBusStand": {
+    "lat": 13.009776500000001,
+    "lng": 77.50594505000001
+  },
+  "PeenyaPoliceStation": {
+    "lat": 13.0371606,
+    "lng": 77.52245386666665
+  },
+  "PlatformRdJunction": {
+    "lat": 12.981689739999998,
+    "lng": 77.57028297999999
+  },
+  "PoliceCornerJunc": {
+    "lat": 12.968714985,
+    "lng": 77.5870358053846
+  },
+  "PoliceTimmaiahCircle(GPO)": {
+    "lat": 12.98220087142857,
+    "lng": 77.59418355
+  },
+  "PotteryCircle": {
+    "lat": 13.0021017,
+    "lng": 77.61223598000001
+  },
+  "PrasannaJunction": {
+    "lat": 12.975611336666667,
+    "lng": 77.55341817833335
+  },
+  "PriyadarshiniHotel,Jayamahal,RT Nagar": {
+    "lat": 13.001149260000002,
+    "lng": 77.59474788
+  },
+  "PurnimaTheaterJunc": {
+    "lat": 12.96025307142857,
+    "lng": 77.5876889
+  },
+  "PuttammaChoultryNagarbhavi": {
+    "lat": 12.9756474,
+    "lng": 77.53791515
+  },
+  "QueensStatueCircle": {
+    "lat": 12.976717142857142,
+    "lng": 77.59913135714285
+  },
+  "RRR(Okalipuram)Junction": {
+    "lat": 12.982382600000001,
+    "lng": 77.56777453333333
+  },
+  "Rajajinagagr1stBlockJunction": {
+    "lat": 13.00449865,
+    "lng": 77.54946015
+  },
+  "Rajajinagar19thMainJunc": {
+    "lat": 12.9977006,
+    "lng": 77.55124131666668
+  },
+  "RajajinagarEntranceJunction": {
+    "lat": 12.9822577,
+    "lng": 77.55984628
+  },
+  "RajarajeshwariKalyanaMantapaJunc": {
+    "lat": 12.994492,
+    "lng": 77.5541902
+  },
+  "RajeshwariJunc": {
+    "lat": 12.936724756818181,
+    "lng": 77.51907055181819
+  },
+  "RamaiahCircle-UlsoorPoliceStation": {
+    "lat": 12.975644066666668,
+    "lng": 77.6259338
+  },
+  "RamamurthyNagarJunction": {
+    "lat": 13.015187844444446,
+    "lng": 77.66126624444445
+  },
+  "Richmond circle jn": {
+    "lat": 12.964843488888889,
+    "lng": 77.59636673333334
+  },
+  "Ring road-Near Kengunte Junction": {
+    "lat": 12.959364842857141,
+    "lng": 77.50398327142857
+  },
+  "RingRoad-UllalJunction": {
+    "lat": 12.95178307142857,
+    "lng": 77.49974574285714
+  },
+  "RoyanCircle-Chamrajpete": {
+    "lat": 12.9624886,
+    "lng": 77.5656329
+  },
+  "SRS Peenya Junc": {
+    "lat": 13.034508519999997,
+    "lng": 77.529849455
+  },
+  "SadahalliGateJunc(AirportRd)": {
+    "lat": 13.190765028571432,
+    "lng": 77.64583525714285
+  },
+  "SadashivnagarJunc": {
+    "lat": 13.015022161538464,
+    "lng": 77.57265107692308
+  },
+  "SafinaPlazaJunc": {
+    "lat": 12.9801409,
+    "lng": 77.6074116
+  },
+  "SagarHospitalJunc": {
+    "lat": 12.927834600000002,
+    "lng": 77.60037306000001
+  },
+  "SagarTheatreJunc": {
+    "lat": 12.97467748,
+    "lng": 77.57884895999999
+  },
+  "SandeepUnnikrishnan-Yelhanka": {
+    "lat": 13.1013404125,
+    "lng": 77.58601867499999
+  },
+  "SantheCircle": {
+    "lat": 13.097470472,
+    "lng": 77.598195376
+  },
+  "SarjapurRd-St JohnsRdJunc": {
+    "lat": 12.92788846,
+    "lng": 77.61594824
+  },
+  "SatteliteBusStandJunc": {
+    "lat": 12.954126423255811,
+    "lng": 77.543464
+  },
+  "ShankarMuttCircle": {
+    "lat": 12.999046466666668,
+    "lng": 77.54133353333333
+  },
+  "ShantalaJunction": {
+    "lat": 12.974563449333333,
+    "lng": 77.57028000666668
+  },
+  "ShivajiTalkiesJunc": {
+    "lat": 12.962567871428572,
+    "lng": 77.58247607142857
+  },
+  "Shivajinagar(BRV)Junction": {
+    "lat": 12.979665,
+    "lng": 77.60270885624999
+  },
+  "ShivanahalliJunctionWOC": {
+    "lat": 12.989829300000002,
+    "lng": 77.55055643333333
+  },
+  "ShivandaCircle": {
+    "lat": 12.987866075000001,
+    "lng": 77.57968311666666
+  },
+  "Shivashankara circle": {
+    "lat": 12.95775582,
+    "lng": 77.57404088
+  },
+  "SiddalingaiahCircle": {
+    "lat": 12.9715734,
+    "lng": 77.59450625
+  },
+  "SiddapuraJunction": {
+    "lat": 12.94923378,
+    "lng": 77.59482698
+  },
+  "SilkBoardJunc": {
+    "lat": 12.917013388484849,
+    "lng": 77.62287403454546
+  },
+  "SindhiColonyJunction": {
+    "lat": 12.994906466666665,
+    "lng": 77.61605924444444
+  },
+  "SirsiCircle": {
+    "lat": 12.961263000000002,
+    "lng": 77.56049068888889
+  },
+  "SonyworldJunction": {
+    "lat": 12.9374064,
+    "lng": 77.62750926666666
+  },
+  "South end circle": {
+    "lat": 12.937703816666668,
+    "lng": 77.57961607
+  },
+  "Srigandakaval": {
+    "lat": 12.988480971428572,
+    "lng": 77.5101611
+  },
+  "Srinivagilu(Ejipura)Junc": {
+    "lat": 12.938697999999999,
+    "lng": 77.634254475
+  },
+  "StateBankofMysoreJunc": {
+    "lat": 12.973675366666669,
+    "lng": 77.58222987500001
+  },
+  "SubbannaJunction": {
+    "lat": 12.982938954285713,
+    "lng": 77.5767362342857
+  },
+  "SubedarChatramRd near SheshadripuramPS": {
+    "lat": 12.987117516666666,
+    "lng": 77.57403208333334
+  },
+  "Sumanhalli": {
+    "lat": 12.98678775875,
+    "lng": 77.520432123125
+  },
+  "SwagathMainRd-EastEndRdJunc": {
+    "lat": 12.92727815,
+    "lng": 77.59705165
+  },
+  "TC Palya-OM RoadJunc": {
+    "lat": 13.017485675,
+    "lng": 77.705930225
+  },
+  "TVS CrossJunction": {
+    "lat": 13.0283245,
+    "lng": 77.5191569
+  },
+  "TamarikannanJunc": {
+    "lat": 12.9813476,
+    "lng": 77.6285708
+  },
+  "TataInstituteCircle": {
+    "lat": 13.014359833333335,
+    "lng": 77.56558539999999
+  },
+  "ThomasCafe-New": {
+    "lat": 12.9905937,
+    "lng": 77.6138551
+  },
+  "TownhallJunction": {
+    "lat": 12.963981796666669,
+    "lng": 77.58437726000001
+  },
+  "Trilight Circle,Race course Road": {
+    "lat": 12.9843622,
+    "lng": 77.582986
+  },
+  "TrinityCircle": {
+    "lat": 12.971906496363637,
+    "lng": 77.6193425990909
+  },
+  "TumkurRdMarappanapalyaJunc": {
+    "lat": 13.018958142857143,
+    "lng": 77.55314450714286
+  },
+  "TyagiHengalvarayaJunc(DickensonRd)": {
+    "lat": 12.981654599999999,
+    "lng": 77.60941434
+  },
+  "UCO Bank(Forum)": {
+    "lat": 12.933905,
+    "lng": 77.612605
+  },
+  "UlsoorGateJunc": {
+    "lat": 12.966829125000002,
+    "lng": 77.58747884166667
+  },
+  "UniversityJunc(Janabharti)": {
+    "lat": 12.9358677125,
+    "lng": 77.5125116625
+  },
+  "UpparpetJunction": {
+    "lat": 12.9743854,
+    "lng": 77.5747985
+  },
+  "UrvashiJunction": {
+    "lat": 12.955620883333333,
+    "lng": 77.58573625
+  },
+  "UttarahalliJunction": {
+    "lat": 12.90586404928571,
+    "lng": 77.545120965
+  },
+  "VeerannapalyaJunction(BEL,HO)": {
+    "lat": 13.041578026666668,
+    "lng": 77.61365982999999
+  },
+  "VeerasandraGateJunction": {
+    "lat": 12.839784945454547,
+    "lng": 77.67714299090909
+  },
+  "VetenaryHospitalJunc-Shivajinagar": {
+    "lat": 12.98963695,
+    "lng": 77.599482625
+  },
+  "VijayanagarBusStandJunction": {
+    "lat": 12.973221583333334,
+    "lng": 77.53947993333334
+  },
+  "WebbsCircle": {
+    "lat": 12.973985733333334,
+    "lng": 77.61382183333335
+  },
+  "WilsonGarden10thCrossJunc": {
+    "lat": 12.946020895000002,
+    "lng": 77.59561568333334
+  },
+  "WilsonGarden12thCrossJunc": {
+    "lat": 12.9445289375,
+    "lng": 77.596888675
+  },
+  "WiproJunc-Koramangala": {
+    "lat": 12.9297671,
+    "lng": 77.6330898
+  },
+  "YediyurMeternityHospital": {
+    "lat": 12.9267084,
+    "lng": 77.577034
+  },
+  "YelhankaBypass": {
+    "lat": 13.082246415789472,
+    "lng": 77.59342907894737
+  },
+  "YelhankaCircle": {
+    "lat": 13.094322461764706,
+    "lng": 77.59592726470589
+  },
+  "Yemalur cross junc": {
+    "lat": 12.956005000000001,
+    "lng": 77.69349825
+  },
+  "YeshwanthpuraCircle": {
+    "lat": 13.01776144289474,
+    "lng": 77.55697258157896
+  },
+  "toll gate mysore road": {
+    "lat": 12.957494487575758,
+    "lng": 77.55188395151514
+  }
+}
