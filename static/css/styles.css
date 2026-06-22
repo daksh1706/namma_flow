@@ -1265,3 +1265,184 @@ body::after {
     color: var(--text-secondary);
     line-height: 1.4;
 }
+
+/* Tactical Map Pins */
+.tactical-pin {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
+    border: 2.5px solid #ffffff;
+    transition: all 0.3s ease;
+}
+
+.tactical-pin .pin-icon-wrap {
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.tactical-pin .pin-icon-wrap i {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.manpower-pin {
+    background: #1a73e8; /* Google Maps-style Blue */
+}
+
+.barricade-pin {
+    background: #dc2626; /* Red for barricades */
+}
+
+.destination-pin {
+    background: #16a34a; /* Green for destination */
+}
+
+/* Pulsing effect in background */
+.pin-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.6;
+    animation: pin-pulse-anim 1.8s infinite ease-out;
+    z-index: -1;
+}
+
+@keyframes pin-pulse-anim {
+    0% {
+        transform: scale(1);
+        opacity: 0.65;
+    }
+    100% {
+        transform: scale(2.2);
+        opacity: 0;
+    }
+}
+
+/* Floating Map Legend */
+.map-legend-floating {
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    color: white !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.78rem !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.map-legend-floating h4 {
+    margin: 0 0 4px 0 !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--secondary) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-bottom: 4px !important;
+}
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-row span:last-child {
+    font-weight: 500;
+}
+
+.legend-line {
+    width: 24px;
+    height: 4px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.affected-line {
+    background: #ef4444;
+}
+
+.primary-line {
+    background: #1a73e8;
+}
+
+.alt-line {
+    background: #718096;
+    border-top: 1.5px dashed rgba(255,255,255,0.4);
+}
+
+.legend-icon {
+    width: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+
+.legend-icon.barricade-icon {
+    color: #dc2626;
+}
+
+.legend-icon.manpower-icon {
+    color: #1a73e8;
+}
+
+.legend-polygon-sample {
+    width: 24px;
+    height: 12px;
+    background: rgba(56, 161, 105, 0.1);
+    border: 1.5px dashed rgba(56, 161, 105, 0.45);
+    border-radius: 2px;
+    display: inline-block;
+}
+
+/* Route Tooltips */
+.route-tooltip-affected {
+    background-color: #ef4444 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: bold !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.72rem !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important;
+}
+
+.route-tooltip-primary {
+    background-color: #1a73e8 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: bold !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.72rem !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important;
+}
+
+.route-tooltip-alt {
+    background-color: #4b5563 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: bold !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.72rem !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important;
+}

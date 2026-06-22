@@ -52,6 +52,65 @@ def train_and_save(feedback_path=None):
         json.dump(station_coords, f, indent=2)
     print(f"Saved station coordinates for {len(station_coords)} stations.")
 
+    # Andrew's monotone chain algorithm for Convex Hull boundary polygons
+    def cross_product(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    def compute_convex_hull(points):
+        pts = sorted(list(set(points)))
+        if len(pts) <= 2:
+            return pts
+        
+        lower = []
+        for p in pts:
+            while len(lower) >= 2 and cross_product(lower[-2], lower[-1], p) <= 0:
+                lower.pop()
+            lower.append(p)
+            
+        upper = []
+        for p in reversed(pts):
+            while len(upper) >= 2 and cross_product(upper[-2], upper[-1], p) <= 0:
+                upper.pop()
+            upper.append(p)
+            
+        return lower[:-1] + upper[:-1]
+
+    print("Computing police station jurisdiction polygon boundaries...")
+    station_polygons = {}
+    for station, group in station_grouped:
+        pts = list(zip(group['latitude'], group['longitude']))
+        hull = compute_convex_hull(pts)
+        
+        if len(hull) < 3:
+            s_lat = station_coords[station]["lat"]
+            s_lng = station_coords[station]["lng"]
+            d = 0.015
+            hull = [
+                (s_lat - d, s_lng - d),
+                (s_lat - d, s_lng + d),
+                (s_lat + d, s_lng + d),
+                (s_lat + d, s_lng - d)
+            ]
+            
+        poly_coords = [[ [float(lng), float(lat)] for lat, lng in hull ]]
+        poly_coords[0].append(poly_coords[0][0])
+        
+        station_polygons[station] = {
+            "type": "Feature",
+            "properties": {
+                "police_station": station
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": poly_coords
+            }
+        }
+        
+    with open(os.path.join(MODEL_DIR, "station_polygons.json"), "w") as f:
+        json.dump(station_polygons, f, indent=2)
+    print(f"Saved station polygons for {len(station_polygons)} stations.")
+
+
     # Compute average coordinates for each junction
     print("Computing junction coordinates mapping...")
     junction_coords = {}
@@ -269,7 +328,8 @@ def train_and_save(feedback_path=None):
         "event_types": sorted(list(df['event_type'].astype(str).unique())),
         "junctions": sorted(list(df['junction'].dropna().astype(str).unique())),
         "station_coords": station_coords,
-        "junction_coords": junction_coords
+        "junction_coords": junction_coords,
+        "station_polygons": station_polygons
     }
     with open(os.path.join(MODEL_DIR, "meta_info.json"), "w") as f:
         json.dump(meta_info, f, indent=2)
