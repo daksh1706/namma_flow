@@ -3,15 +3,45 @@
 // Global Variables
 let analyticsMap = null;
 let plannerMap = null;
-let simulatorMarker = null;
+let sourceMarker = null; // Incident Source / Barricade point
+let destMarker = null;   // Incident Destination / Reopen point
 let diversionMarkers = [];
 let diversionLines = [];
 let jurisdictionLayer = null;
 let stationMarker = null;
-let barricadeMarker = null;
-let destinationMarker = null; // Incident destination marker
 let meta = null; // Store metadata globally
-let mapLegend = null; // Map operations legend
+let lastSimulationResult = null;
+let simulationActive = false;
+
+const sourceIcon = L.divIcon({
+    html: `
+      <div class="tactical-pin barricade-pin">
+        <div class="pin-icon-wrap">
+          <i class="fa-solid fa-road-barrier"></i>
+        </div>
+        <div class="pin-pulse"></div>
+      </div>
+    `,
+    className: 'custom-tactical-marker',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+});
+
+const destIcon = L.divIcon({
+    html: `
+      <div class="tactical-pin destination-pin">
+        <div class="pin-icon-wrap">
+          <i class="fa-solid fa-flag-checkered"></i>
+        </div>
+        <div class="pin-pulse"></div>
+      </div>
+    `,
+    className: 'custom-tactical-marker',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+});
 
 let chartCauses = null;
 let chartHours = null;
@@ -153,7 +183,14 @@ async function loadMetaDropdowns(retryCount = 0) {
             const station = stationSelect.value;
             if (meta && meta.station_coords && meta.station_coords[station]) {
                 const coords = meta.station_coords[station];
-                setSimulationLocation(coords.lat, coords.lng);
+                setSourceLocation(coords.lat, coords.lng);
+                setDestLocation(coords.lat + 0.0005, coords.lng - 0.001); // offset slightly
+                if (plannerMap) {
+                    plannerMap.panTo([coords.lat, coords.lng]);
+                }
+                if (simulationActive) {
+                    drawSimulationRoutes();
+                }
             }
         });
         
@@ -379,45 +416,97 @@ function renderCorridorsChart(corridorCounts) {
 function initPlannerTab() {
     setTimeout(() => {
         if (!plannerMap) {
-            plannerMap = L.map('planner-map').setView([12.9716, 77.5946], 12);
+            plannerMap = L.map('planner-map').setView([12.955048, 77.739780], 13);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 maxZoom: 20
             }).addTo(plannerMap);
             
-            // Map click listener to set coordinates
+            // Map click listener to set coordinates of the closer pin
             plannerMap.on('click', (e) => {
                 const { lat, lng } = e.latlng;
-                setSimulationLocation(lat, lng);
+                if (sourceMarker && destMarker) {
+                    const distSource = e.latlng.distanceTo(sourceMarker.getLatLng());
+                    const distDest = e.latlng.distanceTo(destMarker.getLatLng());
+                    if (distSource < distDest) {
+                        setSourceLocation(lat, lng);
+                    } else {
+                        setDestLocation(lat, lng);
+                    }
+                    if (simulationActive) {
+                        drawSimulationRoutes();
+                    }
+                }
             });
             
-            // Add default marker
-            setSimulationLocation(12.9716, 77.5946);
+            // Add default markers near Whitefield incident coordinates
+            setSourceLocation(12.955048, 77.739780);
+            setDestLocation(12.955100, 77.738280);
         } else {
             plannerMap.invalidateSize();
         }
     }, 100);
 }
 
-// Place pin on simulation map
-function setSimulationLocation(lat, lng) {
+// Place source pin on simulation map
+function setSourceLocation(lat, lng) {
     document.getElementById("sim-latitude").value = lat.toFixed(6);
     document.getElementById("sim-longitude").value = lng.toFixed(6);
-    document.getElementById("simulator-coordinates").textContent = `Location: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
     
-    if (simulatorMarker) {
-        simulatorMarker.setLatLng([lat, lng]);
+    if (sourceMarker) {
+        sourceMarker.setLatLng([lat, lng]);
     } else {
-        simulatorMarker = L.marker([lat, lng], {
+        sourceMarker = L.marker([lat, lng], {
+            icon: sourceIcon,
             draggable: true
         }).addTo(plannerMap);
         
-        simulatorMarker.on('dragend', () => {
-            const pos = simulatorMarker.getLatLng();
-            setSimulationLocation(pos.lat, pos.lng);
+        sourceMarker.on('dragend', () => {
+            const pos = sourceMarker.getLatLng();
+            setSourceLocation(pos.lat, pos.lng);
+            if (simulationActive) {
+                drawSimulationRoutes();
+            }
         });
     }
-    plannerMap.panTo([lat, lng]);
+    updateCoordinatesLabel();
+}
+
+// Place destination pin on simulation map
+function setDestLocation(lat, lng) {
+    const latEl = document.getElementById("sim-dest-latitude");
+    const lngEl = document.getElementById("sim-dest-longitude");
+    if (latEl && lngEl) {
+        latEl.value = lat.toFixed(6);
+        lngEl.value = lng.toFixed(6);
+    }
+    
+    if (destMarker) {
+        destMarker.setLatLng([lat, lng]);
+    } else {
+        destMarker = L.marker([lat, lng], {
+            icon: destIcon,
+            draggable: true
+        }).addTo(plannerMap);
+        
+        destMarker.on('dragend', () => {
+            const pos = destMarker.getLatLng();
+            setDestLocation(pos.lat, pos.lng);
+            if (simulationActive) {
+                drawSimulationRoutes();
+            }
+        });
+    }
+    updateCoordinatesLabel();
+}
+
+function updateCoordinatesLabel() {
+    if (sourceMarker && destMarker) {
+        const sPos = sourceMarker.getLatLng();
+        const dPos = destMarker.getLatLng();
+        document.getElementById("simulator-coordinates").textContent = 
+            `Source: ${sPos.lat.toFixed(5)}, ${sPos.lng.toFixed(5)} | Dest: ${dPos.lat.toFixed(5)}, ${dPos.lng.toFixed(5)}`;
+    }
 }
 
 // Handle Run predictive mitigation simulation
@@ -516,210 +605,10 @@ async function handleSimulatorSubmit(e) {
             document.getElementById("res-diversion-junctions").innerHTML = "<li class='junction-tag'><i class='fa-solid fa-ban'></i> None</li>";
         }
         
-        // Update Simulator Map with Diversion Points
-        clearDiversions();
-        
-        // Draw Police Station Jurisdiction in background
-        const selectedStation = police_station;
-        if (meta && meta.station_polygons && meta.station_polygons[selectedStation]) {
-            const polygonGeoJSON = meta.station_polygons[selectedStation];
-            
-            // Draw Jurisdiction Boundary Area (GeoJSON polygon, light-green/emerald #38A169 with 0.1 opacity)
-            jurisdictionLayer = L.geoJSON(polygonGeoJSON, {
-                style: {
-                    color: "#38A169",       // emerald green
-                    weight: 2,              // thin outline
-                    opacity: 0.45,          // semi-transparent outline
-                    fillColor: "#38A169",   // emerald green fill
-                    fillOpacity: 0.1,       // very light fill (0.1 opacity as requested)
-                    dashArray: "3, 6"       // dashed outline
-                }
-            }).addTo(plannerMap);
-            
-            // Draw Station Centroid Marker
-            const stationIcon = L.divIcon({
-                html: `<div style="background: #38a169; width: 12px; height: 12px; border: 2px solid white; border-radius: 4px; box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);"></div>`,
-                className: 'custom-station-icon',
-                iconSize: [12, 12]
-            });
-            stationMarker = L.marker([meta.station_coords[selectedStation].lat, meta.station_coords[selectedStation].lng], { icon: stationIcon }).addTo(plannerMap);
-            stationMarker.bindPopup(`<strong>${selectedStation} Police Station Centroid</strong>`);
-        } else if (meta && meta.station_coords && meta.station_coords[selectedStation]) {
-            const sCoords = meta.station_coords[selectedStation];
-            // Circle fallback if GeoJSON polygon not found
-            jurisdictionLayer = L.circle([sCoords.lat, sCoords.lng], {
-                radius: 2200,
-                color: "#38A169",
-                fillColor: "#38A169",
-                fillOpacity: 0.1,
-                weight: 1.5,
-                dashArray: "3, 6"
-            }).addTo(plannerMap);
-        }
-
-        if (result.diversion.required && result.diversion.map_points.length > 0) {
-            // Compute upstream (barricade) and downstream coordinates relative to incident
-            const firstDiv = result.diversion.map_points[0];
-            const dx = firstDiv.lat - latitude;
-            const dy = firstDiv.lng - longitude;
-            const len = Math.sqrt(dx * dx + dy * dy);
-            const offsetDist = 0.0015; // ~150 meters
-            let uLat, uLng, dLat, dLng;
-            
-            if (len > 0) {
-                const ux = dx / len;
-                const uy = dy / len;
-                uLat = latitude - ux * offsetDist;
-                uLng = longitude - uy * offsetDist;
-                dLat = latitude + ux * offsetDist;
-                dLng = longitude + uy * offsetDist;
-            } else {
-                uLat = latitude - 0.001;
-                uLng = longitude - 0.001;
-                dLat = latitude + 0.001;
-                dLng = longitude + 0.001;
-            }
-
-            // 1. Draw Incident Source / Barricading Zone upstream (blocks entrance to affected segment)
-            const barricadeIcon = L.divIcon({
-                html: `
-                  <div class="tactical-pin barricade-pin">
-                    <div class="pin-icon-wrap">
-                      <i class="fa-solid fa-road-barrier"></i>
-                    </div>
-                    <div class="pin-pulse"></div>
-                  </div>
-                `,
-                className: 'custom-tactical-marker',
-                iconSize: [32, 32],
-                iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
-            });
-            barricadeMarker = L.marker([uLat, uLng], { icon: barricadeIcon }).addTo(plannerMap);
-            barricadeMarker.bindPopup(`
-                <div class="map-popup-title">Incident Source (Barricade Point)</div>
-                <div class="map-popup-text">
-                    <strong>Deployment Count:</strong> ${result.barricading.recommended_count} heavy barricades<br>
-                    <strong>Location:</strong> Start of Closed Segment (Upstream)<br>
-                    <strong>Details:</strong> ${result.barricading.setup_description}
-                </div>
-            `);
-
-            // 2. Draw Incident Destination / Reopen point downstream (reopens segment)
-            const destinationIcon = L.divIcon({
-                html: `
-                  <div class="tactical-pin destination-pin">
-                    <div class="pin-icon-wrap">
-                      <i class="fa-solid fa-flag-checkered"></i>
-                    </div>
-                    <div class="pin-pulse"></div>
-                  </div>
-                `,
-                className: 'custom-tactical-marker',
-                iconSize: [32, 32],
-                iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
-            });
-            destinationMarker = L.marker([dLat, dLng], { icon: destinationIcon }).addTo(plannerMap);
-            destinationMarker.bindPopup(`
-                <div class="map-popup-title">Incident Destination (Reopen Point)</div>
-                <div class="map-popup-text">
-                    <strong>Location:</strong> End of Closed Segment (Downstream)<br>
-                    <strong>Status:</strong> Normal traffic flow resumes past this node.
-                </div>
-            `);
-
-            // 3. Fetch and draw road-snapped AFFECTED segment (red line from Source to Destination through incident)
-            getOSRMRoute(uLat, uLng, dLat, dLng).then(coords => {
-                const polylineAffected = L.polyline(coords, {
-                    color: '#ef4444',
-                    weight: 6,
-                    lineCap: 'round',
-                    lineJoin: 'round',
-                    opacity: 0.95
-                }).addTo(plannerMap);
-                polylineAffected.bindTooltip("Affected Route (Road Closed)", { sticky: true, className: "route-tooltip-affected" });
-                diversionLines.push(polylineAffected);
-            });
-
-            // 4. Custom manpower blue/shield pin for diversion guides at intersections
-            const manpowerIcon = L.divIcon({
-                html: `
-                  <div class="tactical-pin manpower-pin">
-                    <div class="pin-icon-wrap">
-                      <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <div class="pin-pulse"></div>
-                  </div>
-                `,
-                className: 'custom-tactical-marker',
-                iconSize: [32, 32],
-                iconAnchor: [16, 32],
-                popupAnchor: [0, -32]
-            });
-
-            // 5. Draw Primary Diversion Route (Incident Source -> targeted junction 1)
-            getOSRMRoute(uLat, uLng, firstDiv.lat, firstDiv.lng).then(coords => {
-                const polylinePrimary = L.polyline(coords, {
-                    color: '#1a73e8', // thick blue line
-                    weight: 6,
-                    lineCap: 'round',
-                    lineJoin: 'round',
-                    opacity: 0.95
-                }).addTo(plannerMap);
-                polylinePrimary.bindTooltip("Primary Diversion Route", { sticky: true, className: "route-tooltip-primary" });
-                diversionLines.push(polylinePrimary);
-            });
-
-            // Draw primary guide marker at the primary targeted junction
-            const m1 = L.marker([firstDiv.lat, firstDiv.lng], { icon: manpowerIcon }).addTo(plannerMap);
-            const off1 = Math.ceil(result.manpower.recommended_headcount * 0.6);
-            m1.bindPopup(`
-                <div class="map-popup-title">Traffic Police Control Node</div>
-                <div class="map-popup-text">
-                    <strong>Junction:</strong> ${humanizeJunctionName(firstDiv.name)}<br>
-                    <strong>Role:</strong> Primary Diversion Control Guide<br>
-                    <strong>Headcount:</strong> ${off1} Traffic Officers deployed
-                </div>
-            `);
-            diversionMarkers.push(m1);
-
-            // 6. Draw Alternative Rerouting Path (Incident Source -> alternative targeted junction 2)
-            if (result.diversion.map_points.length > 1) {
-                const secondDiv = result.diversion.map_points[1];
-                getOSRMRoute(uLat, uLng, secondDiv.lat, secondDiv.lng).then(coords => {
-                    const polylineAlt = L.polyline(coords, {
-                        color: '#718096', // muted grey
-                        weight: 5,
-                        dashArray: '8, 8', // dashed
-                        lineCap: 'round',
-                        lineJoin: 'round',
-                        opacity: 0.75
-                    }).addTo(plannerMap);
-                    polylineAlt.bindTooltip("Alternative Rerouting Path", { sticky: true, className: "route-tooltip-alt" });
-                    diversionLines.push(polylineAlt);
-                });
-
-                // Draw secondary guide marker at the alternative targeted junction
-                const m2 = L.marker([secondDiv.lat, secondDiv.lng], { icon: manpowerIcon }).addTo(plannerMap);
-                const off2 = Math.floor(result.manpower.recommended_headcount * 0.4);
-                m2.bindPopup(`
-                    <div class="map-popup-title">Traffic Police Control Node</div>
-                    <div class="map-popup-text">
-                        <strong>Junction:</strong> ${humanizeJunctionName(secondDiv.name)}<br>
-                        <strong>Role:</strong> Secondary Rerouting Patrol<br>
-                        <strong>Headcount:</strong> ${off2} Traffic Officers deployed
-                    </div>
-                `);
-                diversionMarkers.push(m2);
-            }
-
-            // Adjust bounds to fit all including destinationMarker
-            setTimeout(() => {
-                const group = new L.featureGroup([simulatorMarker, ...diversionMarkers, barricadeMarker, destinationMarker]);
-                plannerMap.fitBounds(group.getBounds().pad(0.2));
-            }, 1000);
-        }
+        // Set simulation active and draw routes
+        lastSimulationResult = result;
+        simulationActive = true;
+        drawSimulationRoutes();
         
         // Populate hidden feedback inputs
         document.getElementById("feed-event-id").value = result.event_id;
@@ -750,6 +639,205 @@ async function handleSimulatorSubmit(e) {
     }
 }
 
+function drawSimulationRoutes() {
+    if (!lastSimulationResult || !simulationActive) return;
+    
+    // Clear old lines/diversion markers
+    clearDiversions();
+    
+    const sourceLatLng = sourceMarker.getLatLng();
+    const destLatLng = destMarker.getLatLng();
+    
+    const uLat = sourceLatLng.lat;
+    const uLng = sourceLatLng.lng;
+    const dLat = destLatLng.lat;
+    const dLng = destLatLng.lng;
+    
+    // Bind / update popups on source and dest markers
+    sourceMarker.bindPopup(`
+        <div class="map-popup-title">Incident Source (Barricade Point)</div>
+        <div class="map-popup-text">
+            <strong>Deployment Count:</strong> ${lastSimulationResult.barricading.recommended_count} heavy barricades<br>
+            <strong>Location:</strong> Start of Closed Segment<br>
+            <strong>Details:</strong> ${lastSimulationResult.barricading.setup_description}
+        </div>
+    `);
+    
+    destMarker.bindPopup(`
+        <div class="map-popup-title">Incident Destination (Reopen Point)</div>
+        <div class="map-popup-text">
+            <strong>Location:</strong> End of Closed Segment<br>
+            <strong>Status:</strong> Normal traffic flow resumes past this node.
+        </div>
+    `);
+    
+    // Draw affected route (red line from Source to Destination)
+    getOSRMRoute([[uLat, uLng], [dLat, dLng]]).then(coords => {
+        const polylineAffected = L.polyline(coords, {
+            color: '#ef4444',
+            weight: 6,
+            lineCap: 'round',
+            lineJoin: 'round',
+            opacity: 0.95
+        }).addTo(plannerMap);
+        polylineAffected.bindTooltip("Affected Route (Road Closed)", { sticky: true, className: "route-tooltip-affected" });
+        diversionLines.push(polylineAffected);
+    });
+    
+    // Draw Police Station Jurisdiction Boundary in background
+    const selectedStation = document.getElementById("sim-police-station").value;
+    if (meta && meta.station_polygons && meta.station_polygons[selectedStation]) {
+        const polygonGeoJSON = meta.station_polygons[selectedStation];
+        jurisdictionLayer = L.geoJSON(polygonGeoJSON, {
+            style: {
+                color: "#38A169",
+                weight: 2,
+                opacity: 0.45,
+                fillColor: "#38A169",
+                fillOpacity: 0.1,
+                dashArray: "3, 6"
+            }
+        }).addTo(plannerMap);
+        
+        // Draw Station Centroid Marker
+        const stationIcon = L.divIcon({
+            html: `<div style="background: #38a169; width: 12px; height: 12px; border: 2px solid white; border-radius: 4px; box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);"></div>`,
+            className: 'custom-station-icon',
+            iconSize: [12, 12]
+        });
+        stationMarker = L.marker([meta.station_coords[selectedStation].lat, meta.station_coords[selectedStation].lng], { icon: stationIcon }).addTo(plannerMap);
+        stationMarker.bindPopup(`<strong>${selectedStation} Police Station Centroid</strong>`);
+    } else if (meta && meta.station_coords && meta.station_coords[selectedStation]) {
+        const sCoords = meta.station_coords[selectedStation];
+        jurisdictionLayer = L.circle([sCoords.lat, sCoords.lng], {
+            radius: 2200,
+            color: "#38A169",
+            fillColor: "#38A169",
+            fillOpacity: 0.1,
+            weight: 1.5,
+            dashArray: "3, 6"
+        }).addTo(plannerMap);
+    }
+    
+    if (lastSimulationResult.diversion.required && lastSimulationResult.diversion.map_points.length > 0) {
+        const firstDiv = lastSimulationResult.diversion.map_points[0];
+        
+        // Calculate detour waypoint: mid-point offset perpendicular to the closed segment
+        const midLat = (uLat + dLat) / 2;
+        const midLng = (uLng + dLng) / 2;
+        const dx = dLat - uLat;
+        const dy = dLng - uLng;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        
+        let detourLat = midLat;
+        let detourLng = midLng;
+        const detourOffset = 0.002; // ~200 meters offset
+        
+        if (len > 0) {
+            // Perpendicular unit vector (rotated 90 degrees)
+            const px = -dy / len;
+            const py = dx / len;
+            detourLat = midLat + px * detourOffset;
+            detourLng = midLng + py * detourOffset;
+        } else {
+            detourLat = midLat + 0.0015;
+            detourLng = midLng + 0.0015;
+        }
+        
+        // Manpower Icon
+        const manpowerIcon = L.divIcon({
+            html: `
+              <div class="tactical-pin manpower-pin">
+                <div class="pin-icon-wrap">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="pin-pulse"></div>
+              </div>
+            `,
+            className: 'custom-tactical-marker',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+        
+        // Draw Primary Diversion Route (Source -> Detour Waypoint -> firstDiv)
+        getOSRMRoute([[uLat, uLng], [detourLat, detourLng], [firstDiv.lat, firstDiv.lng]]).then(coords => {
+            const polylinePrimary = L.polyline(coords, {
+                color: '#1a73e8', // thick blue line
+                weight: 6,
+                lineCap: 'round',
+                lineJoin: 'round',
+                opacity: 0.95
+            }).addTo(plannerMap);
+            polylinePrimary.bindTooltip("Primary Diversion Route", { sticky: true, className: "route-tooltip-primary" });
+            diversionLines.push(polylinePrimary);
+        });
+        
+        // Draw primary guide marker at the primary targeted junction
+        const m1 = L.marker([firstDiv.lat, firstDiv.lng], { icon: manpowerIcon }).addTo(plannerMap);
+        const off1 = Math.ceil(lastSimulationResult.manpower.recommended_headcount * 0.6);
+        m1.bindPopup(`
+            <div class="map-popup-title">Traffic Police Control Node</div>
+            <div class="map-popup-text">
+                <strong>Junction:</strong> ${humanizeJunctionName(firstDiv.name)}<br>
+                <strong>Role:</strong> Primary Diversion Control Guide<br>
+                <strong>Headcount:</strong> ${off1} Traffic Officers deployed
+            </div>
+        `);
+        diversionMarkers.push(m1);
+        
+        // Draw Alternative Rerouting Path (Source -> opposite detour waypoint -> secondDiv)
+        if (lastSimulationResult.diversion.map_points.length > 1) {
+            const secondDiv = lastSimulationResult.diversion.map_points[1];
+            
+            // Use opposite side of perpendicular for alternative detour
+            let altDetourLat = midLat;
+            let altDetourLng = midLng;
+            if (len > 0) {
+                const px = -dy / len;
+                const py = dx / len;
+                altDetourLat = midLat - px * detourOffset;
+                altDetourLng = midLng - py * detourOffset;
+            } else {
+                altDetourLat = midLat - 0.0015;
+                altDetourLng = midLng - 0.0015;
+            }
+            
+            getOSRMRoute([[uLat, uLng], [altDetourLat, altDetourLng], [secondDiv.lat, secondDiv.lng]]).then(coords => {
+                const polylineAlt = L.polyline(coords, {
+                    color: '#718096', // muted grey
+                    weight: 5,
+                    dashArray: '8, 8', // dashed
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                    opacity: 0.75
+                }).addTo(plannerMap);
+                polylineAlt.bindTooltip("Alternative Rerouting Path", { sticky: true, className: "route-tooltip-alt" });
+                diversionLines.push(polylineAlt);
+            });
+            
+            // Draw secondary guide marker at the alternative targeted junction
+            const m2 = L.marker([secondDiv.lat, secondDiv.lng], { icon: manpowerIcon }).addTo(plannerMap);
+            const off2 = Math.floor(lastSimulationResult.manpower.recommended_headcount * 0.4);
+            m2.bindPopup(`
+                <div class="map-popup-title">Traffic Police Control Node</div>
+                <div class="map-popup-text">
+                    <strong>Junction:</strong> ${humanizeJunctionName(secondDiv.name)}<br>
+                    <strong>Role:</strong> Secondary Rerouting Patrol<br>
+                    <strong>Headcount:</strong> ${off2} Traffic Officers deployed
+                </div>
+            `);
+            diversionMarkers.push(m2);
+        }
+        
+        // Adjust bounds to fit all
+        setTimeout(() => {
+            const group = new L.featureGroup([sourceMarker, destMarker, ...diversionMarkers]);
+            plannerMap.fitBounds(group.getBounds().pad(0.2));
+        }, 500);
+    }
+}
+
 function clearDiversions() {
     diversionMarkers.forEach(m => plannerMap.removeLayer(m));
     diversionLines.forEach(l => plannerMap.removeLayer(l));
@@ -764,60 +852,6 @@ function clearDiversions() {
         plannerMap.removeLayer(stationMarker);
         stationMarker = null;
     }
-    if (barricadeMarker) {
-        plannerMap.removeLayer(barricadeMarker);
-        barricadeMarker = null;
-    }
-    if (destinationMarker) {
-        plannerMap.removeLayer(destinationMarker);
-        destinationMarker = null;
-    }
-    if (mapLegend) {
-        plannerMap.removeControl(mapLegend);
-        mapLegend = null;
-    }
-}
-
-function updateMapLegend() {
-    if (mapLegend) {
-        plannerMap.removeControl(mapLegend);
-    }
-    
-    mapLegend = L.control({ position: 'bottomright' });
-    
-    mapLegend.onAdd = function (map) {
-        const div = L.DomUtil.create('div', 'map-legend-floating');
-        div.innerHTML = `
-            <h4>Tactical Operations Legend</h4>
-            <div class="legend-row">
-                <span class="legend-line affected-line"></span>
-                <span>Affected Route (Closed)</span>
-            </div>
-            <div class="legend-row">
-                <span class="legend-line primary-line"></span>
-                <span>Primary Diversion Route</span>
-            </div>
-            <div class="legend-row">
-                <span class="legend-line alt-line"></span>
-                <span>Alternative Rerouting Path</span>
-            </div>
-            <div class="legend-row">
-                <span class="legend-icon barricade-icon"><i class="fa-solid fa-road-barrier"></i></span>
-                <span>Barricade Needed (Blocked Node)</span>
-            </div>
-            <div class="legend-row">
-                <span class="legend-icon manpower-icon"><i class="fa-solid fa-shield-halved"></i></span>
-                <span>Manpower Needed (Control Node)</span>
-            </div>
-            <div class="legend-row">
-                <span class="legend-polygon-sample"></span>
-                <span>Police Station Jurisdiction Area</span>
-            </div>
-        `;
-        return div;
-    };
-    
-    mapLegend.addTo(plannerMap);
 }
 
 // 5. Submit feedback (Close event)
@@ -874,6 +908,8 @@ async function handleFeedbackSubmit(e) {
         
         // Hide panel & clear marker
         document.getElementById("prediction-result-panel").style.display = "none";
+        simulationActive = false;
+        lastSimulationResult = null;
         clearDiversions();
         
         // Redirect tab to learning tab
@@ -1060,9 +1096,10 @@ function generateCurvedPath(lat1, lng1, lat2, lng2) {
     return points;
 }
 
-async function getOSRMRoute(lat1, lng1, lat2, lng2) {
+async function getOSRMRoute(points) {
     try {
-        const url = `https://router.project-osrm.org/route/v1/driving/${lng1},${lat1};${lng2},${lat2}?geometries=geojson`;
+        const coordString = points.map(p => `${p[1]},${p[0]}`).join(';');
+        const url = `https://router.project-osrm.org/route/v1/driving/${coordString}?geometries=geojson`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("OSRM status not OK");
         const data = await response.json();
@@ -1072,5 +1109,11 @@ async function getOSRMRoute(lat1, lng1, lat2, lng2) {
     } catch (e) {
         console.error("OSRM routing API error, falling back to curved path:", e);
     }
-    return generateCurvedPath(lat1, lng1, lat2, lng2); // smooth curved fallback
+    // Fallback: concatenate curved paths for consecutive legs
+    let fallbackPath = [];
+    for (let i = 0; i < points.length - 1; i++) {
+        const leg = generateCurvedPath(points[i][0], points[i][1], points[i+1][0], points[i+1][1]);
+        fallbackPath = fallbackPath.concat(leg);
+    }
+    return fallbackPath;
 }

@@ -252,16 +252,26 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group span-6">
-                                        <label for="sim-latitude">Latitude</label>
-                                        <input type="number" id="sim-latitude" step="0.000001" value="12.9716" required>
+                                        <label for="sim-latitude">Source Latitude (Barricade)</label>
+                                        <input type="number" id="sim-latitude" step="0.000001" value="12.955048" required>
                                     </div>
                                     <div class="form-group span-6">
-                                        <label for="sim-longitude">Longitude</label>
-                                        <input type="number" id="sim-longitude" step="0.000001" value="77.5946" required>
+                                        <label for="sim-longitude">Source Longitude (Barricade)</label>
+                                        <input type="number" id="sim-longitude" step="0.000001" value="77.739780" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group span-6">
+                                        <label for="sim-dest-latitude">Dest Latitude (Reopen)</label>
+                                        <input type="number" id="sim-dest-latitude" step="0.000001" value="12.955100" required>
+                                    </div>
+                                    <div class="form-group span-6">
+                                        <label for="sim-dest-longitude">Dest Longitude (Reopen)</label>
+                                        <input type="number" id="sim-dest-longitude" step="0.000001" value="77.738280" required>
                                     </div>
                                 </div>
                                 <div class="map-helper-tip">
-                                    <i class="fa-solid fa-circle-info"></i> Tip: You can click anywhere on the simulator map to place a pin and load coordinates!
+                                    <i class="fa-solid fa-circle-info"></i> Tip: Drag the red (Source) and green (Destination) pins to place barricades and reopen points exactly, or click the map to reposition the closest pin!
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group span-6">
